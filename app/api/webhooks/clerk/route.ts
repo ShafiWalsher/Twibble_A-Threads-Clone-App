@@ -58,6 +58,8 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, first_name, username } = evt.data;
 
+    console.log({ EventFired: "True" });
+
     const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
@@ -68,6 +70,8 @@ export async function POST(req: Request) {
 
     // create new user in MongoDb
     const newUser = await createUser(user);
+
+    console.log({ newUser });
 
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
