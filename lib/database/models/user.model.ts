@@ -7,14 +7,8 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   name: { type: String, required: true },
-  photo: { type: String, required: true },
-  bio: { type: String, required: true },
-  threads: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Thread",
-    },
-  ],
+  photo: { type: String },
+  bio: { type: String },
   onboarded: { type: Boolean, default: false },
 });
 
