@@ -9,6 +9,12 @@ const userSchema = new Schema({
   name: { type: String, required: true },
   photo: { type: String },
   bio: { type: String },
+  threads: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Thread",
+    },
+  ],
   onboarded: { type: Boolean, default: false },
 });
 

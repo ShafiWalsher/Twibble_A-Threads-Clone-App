@@ -5,10 +5,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Image from "next/image";
 import { menuItems } from "@/constants";
 import Link from "next/link";
-import { SignOutButton, SignedIn } from "@clerk/nextjs";
+import { SignOutButton, SignedIn, useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const HamMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { signOut } = useClerk();
+  const router = useRouter();
   return (
     <Popover>
       <PopoverTrigger asChild onClick={() => setIsOpen(!isOpen)}>
@@ -28,10 +31,13 @@ const HamMenu = () => {
             <>
               {item.value === "Logout" ? (
                 <SignedIn>
-                  <Link href={item.href} key={index} className="ham-menu_text">
-                    <SignOutButton>
-                      <button className="outline-none border-0">Logout</button>
-                    </SignOutButton>
+                  <Link
+                    onClick={() => signOut(() => router.push("/sign-in"))}
+                    href={item.href}
+                    key={index}
+                    className="ham-menu_text"
+                  >
+                    Logout
                   </Link>
                 </SignedIn>
               ) : (

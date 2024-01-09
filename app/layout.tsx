@@ -25,8 +25,8 @@ export default function RootLayout({
         baseTheme: dark,
       }}
     >
-      <html lang="en">
-        <body className={`${nunito.className} bg-dark-1`}>{children}</body>
+      <html lang="en" className="bg-dark-1">
+        <body className={nunito.className}>{children}</body>
       </html>
     </ClerkProvider>
   );
