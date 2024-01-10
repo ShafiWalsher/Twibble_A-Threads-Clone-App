@@ -7,12 +7,19 @@ const Page = async () => {
 
   const userInfo = {};
 
+  // const userData = {
+  //   userId: userInfo?._id,
+  //   username: userInfo?.username || "",
+  //   name: userInfo?.name || "",
+  //   bio: userInfo?.bio || "",
+  //   photoUrl: userInfo?.photoUrl,
+  // };
   const userData = {
-    userId: userInfo?._id,
-    username: userInfo?.username || "",
-    name: userInfo?.name || "",
-    bio: userInfo?.bio || "",
-    photoUrl: userInfo?.photoUrl,
+    userId: "",
+    username: "",
+    name: "",
+    bio: "",
+    photoUrl: "",
   };
 
   return (
