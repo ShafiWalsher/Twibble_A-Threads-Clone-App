@@ -52,12 +52,13 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
 
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
-    defaultValues: {
-      photoUrl: user?.image ? user.image : "",
-      name: user?.name ? user.name : "",
-      username: user?.username ? user.username : "",
-      bio: user?.bio ? user.bio : "",
-    },
+    defaultValues: initialValues,
+    // defaultValues: {
+    //   photoUrl: user?.image ? user.image : "",
+    //   name: user?.name ? user.name : "",
+    //   username: user?.username ? user.username : "",
+    //   bio: user?.bio ? user.bio : "",
+    // },
   });
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
