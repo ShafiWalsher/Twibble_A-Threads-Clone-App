@@ -44,3 +44,10 @@ export const menuItems = [
   { value: "Report a problem", href: "" },
   { value: "Logout", href: "" },
 ];
+
+export const profileDefaultValues = {
+  photoUrl: "",
+  name: "",
+  username: "",
+  bio: "",
+};

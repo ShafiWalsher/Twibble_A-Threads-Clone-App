@@ -20,3 +20,5 @@ export function formatThreadCount(count: number): string {
     return `${threadCount} ${threadWord}`;
   }
 }
+
+export const convertFileToUrl = (file: File) => URL.createObjectURL(file);

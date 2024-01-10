@@ -4,14 +4,14 @@ export type CreateUserParams = {
   firstName: string;
   username: string;
   email: string;
-  photo: string;
+  photoUrl: string;
   bio?: string | "";
 };
 
 export type UpdateUserParams = {
   firstName: string;
   username: string;
-  photo: string;
+  photoUrl: string;
   bio?: string | "";
 };
 

@@ -65,7 +65,8 @@ export async function POST(req: Request) {
       email: email_addresses[0].email_address,
       username: username!, // username sometime can be null
       firstName: first_name,
-      photo: image_url,
+      photoUrl: image_url,
+      bio: "",
     };
 
     // create new user in MongoDb
@@ -91,7 +92,7 @@ export async function POST(req: Request) {
     const user = {
       firstName: first_name,
       username: username!,
-      photo: image_url,
+      photoUrl: image_url,
     };
 
     const updatedUser = await updateUser(id, user);
