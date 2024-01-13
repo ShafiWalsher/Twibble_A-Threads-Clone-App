@@ -40,6 +40,13 @@ module.exports = withUt({
           fontWeight: "700",
         },
       ],
+      "heading2-extrabold": [
+        "30px",
+        {
+          lineHeight: "140%",
+          fontWeight: "800",
+        },
+      ],
       "heading2-semibold": [
         "30px",
         {
@@ -115,6 +122,13 @@ module.exports = withUt({
         {
           lineHeight: "100%",
           fontWeight: "600",
+        },
+      ],
+      "base-bold": [
+        "16px",
+        {
+          lineHeight: "100%",
+          fontWeight: "700",
         },
       ],
       "base1-semibold": [
@@ -193,7 +207,8 @@ module.exports = withUt({
         "light-2": "#EFEFEF",
         "light-3": "#7878A3",
         "light-4": "#5C5C7B",
-        "gray-1": "#697C89",
+        // "gray-1": "#697C89",
+        "gray-1": "#777777",
         glassmorphism: "rgba(16, 16, 18, 0.60)",
       },
       boxShadow: {

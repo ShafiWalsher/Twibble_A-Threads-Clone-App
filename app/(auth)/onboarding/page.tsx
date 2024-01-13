@@ -1,25 +1,20 @@
 import AccountProfile from "@/components/forms/AccountProfile";
+import Loading from "@/components/shared/Load";
+import { getUserByClerkId } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
-import React from "react";
+import { Suspense } from "react";
 
 const Page = async () => {
   const user = await currentUser();
+  const clerkId = user?.id;
+  const userInfo = await getUserByClerkId(clerkId);
 
-  const userInfo = {};
-
-  // const userData = {
-  //   userId: userInfo?._id,
-  //   username: userInfo?.username || "",
-  //   name: userInfo?.name || "",
-  //   bio: userInfo?.bio || "",
-  //   photoUrl: userInfo?.photoUrl,
-  // };
   const userData = {
-    userId: "",
-    username: "",
-    name: "",
-    bio: "",
-    photoUrl: "",
+    userId: userInfo?._id,
+    username: userInfo?.username || "",
+    firstName: userInfo?.firstName || "",
+    bio: userInfo?.bio || "",
+    photoUrl: userInfo?.photoUrl,
   };
 
   return (
@@ -37,7 +32,13 @@ const Page = async () => {
           <div className="my-6 h-0.5 w-full bg-light-4/40" />
         </div>
         <section className="bg-dark-2 p-6 rounded-xl">
-          <AccountProfile user={userData} btnTitle="Continue" type="Create" />
+          <Suspense fallback={<Loading />}>
+            <AccountProfile
+              user={userData}
+              btnTitle="Continue"
+              type="OnboardingUpdate"
+            />
+          </Suspense>
         </section>
       </div>
     </div>

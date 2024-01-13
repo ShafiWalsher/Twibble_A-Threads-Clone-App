@@ -1,6 +1,5 @@
 "use client";
 
-import { auth } from "@clerk/nextjs";
 import {
   Form,
   FormControl,
@@ -9,11 +8,10 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import Image from "next/image";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,30 +19,32 @@ import * as z from "zod";
 import { UserValidation } from "@/lib/validations/user";
 import { profileDefaultValues } from "@/constants";
 import FileUploader from "../shared/FileUploader";
+import { useUploadThing } from "@/lib/uploadthing";
+import { updateUser } from "@/lib/actions/user.actions";
+import { handleError } from "@/lib/utils";
 
 interface Props {
   user: {
     userId: string;
     username: string;
-    name: string;
+    firstName: string;
     bio: string;
     photoUrl: string;
   };
   btnTitle: string;
-  type: "Create" | "Update";
+  type: "OnboardingUpdate" | "ProfileUpdate";
 }
 
 const AccountProfile = ({ user, btnTitle, type }: Props) => {
-  //   const { sessionClaims } = auth();
-  //   const userId = sessionClaims?.userId as string;
-
   const router = useRouter();
   const pathname = usePathname();
-  //   const { startUpload } = useUploadThing("media");
+  const { startUpload } = useUploadThing("imageUploader");
+
+  const _id = user.userId;
 
   const [files, setFiles] = useState<File[]>([]);
   const initialValues =
-    user && type === "Update"
+    user && type === "OnboardingUpdate"
       ? {
           ...user,
         }
@@ -53,34 +53,40 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
     defaultValues: initialValues,
-    // defaultValues: {
-    //   photoUrl: user?.image ? user.image : "",
-    //   name: user?.name ? user.name : "",
-    //   username: user?.username ? user.username : "",
-    //   bio: user?.bio ? user.bio : "",
-    // },
   });
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
-    const blob = values.photoUrl;
+    let uploadedImageUrl = values.photoUrl;
 
-    // const hasImageChanged = isBase64Image(blob);
-    // if (hasImageChanged) {
-    //   const imgRes = await startUpload(files);
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files);
 
-    //   if (imgRes && imgRes[0].url) {
-    //     values.photoUrl = imgRes[0].url;
-    //   }
-    // }
+      if (!uploadedImages) {
+        return;
+      }
 
-    // await updateUser({
-    //   name: values.name,
-    //   path: pathname,
-    //   username: values.username,
-    //   userId: user.id,
-    //   bio: values.bio,
-    //   image: values.photoUrl,
-    // });
+      uploadedImageUrl = uploadedImages[0].url;
+    }
+
+    if (type === "OnboardingUpdate") {
+      if (!_id) {
+        router.back();
+        return;
+      }
+
+      try {
+        const updatedUser = await updateUser({
+          _id,
+          user: { ...values, photoUrl: uploadedImageUrl, onboarded: true },
+        });
+
+        if (updatedUser) {
+          router.push(`/profile/${updatedUser._id}`);
+        }
+      } catch (error) {
+        handleError(error);
+      }
+    }
 
     if (pathname === "/profile/edit") {
       router.back();
@@ -100,7 +106,7 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
             control={form.control}
             name="photoUrl"
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem className="w-full flex gap-8">
                 <FormControl className="h-[150px]">
                   <FileUploader
                     onFieldChange={field.onChange}
@@ -108,6 +114,12 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
                     setFiles={setFiles}
                   />
                 </FormControl>
+                <div className="flex flex-col">
+                  <div className="mt-6 text-light-2/90">
+                    <p className=" text-body-bold">{user.firstName}</p>
+                    <p className="text-base-regular">@{user.username}</p>
+                  </div>
+                </div>
               </FormItem>
             )}
           />
@@ -115,9 +127,9 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
           <div className="w-full mt-10 sm:-0">
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
-                <FormItem className="flex flex-col gap-y-2">
+                <FormItem className="flex flex-col gap-y-1">
                   <FormLabel className="account-form_input-label">
                     Name
                   </FormLabel>
@@ -137,7 +149,7 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
               control={form.control}
               name="username"
               render={({ field }) => (
-                <FormItem className="flex w-full flex-col gap-y-3 mt-3 ">
+                <FormItem className="flex w-full flex-col gap-y-1 mt-3 ">
                   <FormLabel className="account-form_input-label">
                     Username
                   </FormLabel>
@@ -160,7 +172,7 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
             control={form.control}
             name="bio"
             render={({ field }) => (
-              <FormItem className="flex w-full flex-col gap-y-3">
+              <FormItem className="flex w-full flex-col gap-y-1">
                 <FormLabel className="account-form_input-label">Bio</FormLabel>
                 <FormControl>
                   <Textarea
@@ -175,7 +187,10 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
             )}
           />
 
-          <Button type="submit" className="bg-primary-500 mt-3">
+          <Button
+            type="submit"
+            className="bg-white mt-3 hover:bg-white/80 text-dark-1"
+          >
             {btnTitle}
           </Button>
         </div>

@@ -4,6 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
 import { clerkClient } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
+import { IUser } from "@/lib/database/models/user.model";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -58,21 +59,16 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, first_name, username } = evt.data;
 
-    console.log({ EventFired: "True" });
-
     const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
-      username: username!, // username sometime can be null
+      username: username!,
       firstName: first_name,
       photoUrl: image_url,
-      bio: "",
     };
 
     // create new user in MongoDb
     const newUser = await createUser(user);
-
-    console.log({ newUser });
 
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
@@ -86,28 +82,28 @@ export async function POST(req: Request) {
   }
 
   // Update users
-  if (eventType === "user.updated") {
-    const { id, image_url, first_name, username } = evt.data;
+  // if (eventType === "user.updated") {
+  //   const { id, image_url, first_name, username } = evt.data;
 
-    const user = {
-      firstName: first_name,
-      username: username!,
-      photoUrl: image_url,
-    };
+  //   const user = {
+  //     firstName: first_name,
+  //     username: username!,
+  //     photoUrl: image_url,
+  //   };
 
-    const updatedUser = await updateUser(id, user);
+  //   const updatedUser = await updateUser(id, user);
 
-    return NextResponse.json({ message: "OK", user: updatedUser });
-  }
+  //   return NextResponse.json({ message: "OK", user: updatedUser });
+  // }
 
-  // Delete user
-  if (eventType === "user.deleted") {
-    const { id } = evt.data;
+  // // Delete user
+  // if (eventType === "user.deleted") {
+  //   const { id } = evt.data;
 
-    const deletedUser = await deleteUser(id!);
+  //   const deletedUser = await deleteUser(id!);
 
-    return NextResponse.json({ message: "OK", user: deletedUser });
-  }
+  //   return NextResponse.json({ message: "OK", user: deletedUser });
+  // }
 
   return new Response("", { status: 200 });
 }

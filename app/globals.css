@@ -7,25 +7,10 @@ html {
   @apply bg-dark-1;
 }
 
-/* input[type="file"]::file-selector-button {
-  display: none;
-}
-
-input[type="file"]::-webkit-file-upload-button {
-  display: block;
-  width: 0;
-  height: 0;
-  margin-left: -100%;
-}
-
-input[type="file"]::-ms-browse {
-  display: none;
-} */
-
 @layer components {
   /* main */
   .main-container {
-    @apply flex min-h-screen flex-1 flex-col items-center bg-dark-1 px-6 pb-10 pt-28 max-md:pb-32 sm:px-10;
+    @apply flex min-h-screen flex-col items-center mx-auto px-6 pt-20 sm:px-10 xl:w-[700px] md:w-[650px] w-full bg-dark-1;
   }
 
   /* Head Text */
@@ -54,7 +39,7 @@ input[type="file"]::-ms-browse {
 
   /* thread card  */
   .thread-card_bar {
-    @apply relative mt-2 w-0.5 grow rounded-full bg-neutral-800;
+    @apply relative mx-auto z-20 mt-2 w-0.5 grow rounded-full bg-gray-1/70;
   }
 
   /* User card */
@@ -79,7 +64,7 @@ input[type="file"]::-ms-browse {
   }
 
   .topbar {
-    @apply fixed top-0 z-30 flex w-full items-center md:justify-between justify-between bg-dark-1 px-6 py-3 backdrop-blur-sm;
+    @apply fixed top-0 z-30 flex md:max-w-[950] lg:max-w-[950] xl:max-w-[1200px] w-full items-center md:justify-between justify-center px-6 py-1 backdrop-blur-xl;
   }
 
   .nav-menu_link {
@@ -95,27 +80,19 @@ input[type="file"]::-ms-browse {
   }
 
   .textarea {
-    @apply bg-dark-4 rounded-xl placeholder:text-dark-4 text-small-regular px-5 py-3 border-none focus-visible:ring-transparent !important;
+    @apply bg-dark-1 rounded-xl placeholder:text-dark-4 text-small-regular px-5 py-3 border-none focus-visible:ring-transparent !important;
   }
 
   .bottombar {
-    @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;
-  }
-
-  .bottombar_container {
-    @apply flex items-center justify-between gap-3 xs:gap-5;
+    @apply md:hidden inline-block fixed bottom-0 z-10 lg:w-[750px] xl:w-[850px] w-full rounded-t-xl bg-dark-3 p-4 backdrop-blur-lg xs:px-7;
   }
 
   .bottombar_link {
-    @apply relative flex flex-col items-center gap-2 rounded-lg p-2 sm:flex-1 sm:px-2 sm:py-2.5;
+    @apply relative flex flex-col hover:bg-dark-4/60 items-center rounded-lg p-4 flex-grow xs:px-2 xs:py-2.5;
   }
 
-  .leftsidebar {
-    @apply sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
-  }
-
-  .leftsidebar_link {
-    @apply relative flex justify-start rounded-lg py-4 px-8 hover:bg-dark-4/70 transition-all duration-75;
+  .topbar_link {
+    @apply relative flex justify-start rounded-lg py-4 px-10 hover:bg-dark-4/70 transition-all duration-75;
   }
 
   .pagination {
@@ -165,7 +142,7 @@ input[type="file"]::-ms-browse {
 
 /* Tab */
 .tab {
-  @apply flex min-h-[50px] flex-1 items-center gap-3 bg-dark-2 text-light-2 data-[state=active]:bg-[#0e0e12] data-[state=active]:text-light-2 !important;
+  @apply flex w-full min-h-[50px]  items-center gap-3 bg-transparent text-body-semibold text-gray-1 data-[state=active]:border-b data-[state=active]:text-light-1 transition-all duration-75 !important;
 }
 
 .no-focus {
@@ -187,6 +164,9 @@ input[type="file"]::-ms-browse {
 .account-form_input {
   @apply border border-dark-4 bg-dark-3 text-light-1 mt-0 !important;
 }
+.account-form_textarea {
+  @apply border-0 outline-none ring-0 focus:ring-0 bg-transparent no-focus text-light-1 mt-0 p-0 placeholder:text-gray-1 placeholder:text-base-regular text-base-regular !important;
+}
 
 /* Small Text */
 .text-small {
@@ -206,7 +186,17 @@ input[type="file"]::-ms-browse {
   @apply no-focus outline-none text-light-1 bg-dark-2 my-auto py-2 !important;
 }
 
+/* Thread card */
+.thread-card_link {
+  @apply relative h-6 w-6 rounded-full hover:bg-dark-2 transition-all duration-75 !important;
+}
+
 /* Thread create */
-#dialog button svg {
+[role="dialog"] button svg {
   @apply hidden;
+}
+
+/* Profile Tabs */
+div[role="tabpanel"][data-state="inactive"] {
+  display: none;
 }

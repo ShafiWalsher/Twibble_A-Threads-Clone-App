@@ -6,7 +6,7 @@ import { dark } from "@clerk/themes";
 
 const nunito = Nunito_Sans({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700"],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {

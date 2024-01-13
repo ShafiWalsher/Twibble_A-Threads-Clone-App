@@ -33,33 +33,49 @@ const FileUploader = ({
   });
 
   return (
-    <div {...getRootProps()} className="h-[150px] w-[150px] flex items-center ">
-      <input {...getInputProps()} />
-      <input {...getInputProps()} />
+    <>
+      {/* <div className="flex gap-10"> */}
+      <div
+        {...getRootProps()}
+        className="h-[150px] w-[150px] flex items-center rounded-full"
+      >
+        <input {...getInputProps()} />
+        <input {...getInputProps()} />
 
-      <div className="group w-full h-full flex items-center justify-center bg-dark-4/70 rounded-full cursor-pointer relative">
-        <div className="w-full h-full bg-dark-1/30 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 absolute transition-opacity duration-75" />
-        <div className="w-full h-full flex items-center justify-center rounded-full">
-          {photoUrl ? (
-            <img
-              src={photoUrl}
-              alt="image"
-              width={250}
-              height={250}
-              style={{ objectFit: "contain" }}
-            />
-          ) : (
+        <div className="group w-full h-full flex items-center justify-center bg-dark-4/70 rounded-full cursor-pointer relative">
+          <div className="w-full h-full bg-dark-1/30 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 absolute transition-opacity duration-75" />
+          <div className="w-full h-full flex items-center justify-center rounded-full">
             <Image
-              src="/assets/icons/profile.svg"
-              alt="profile"
-              width={40}
-              height={40}
-              style={{ objectFit: "contain" }}
+              src="/assets/icons/camera.svg"
+              alt="camera"
+              width={25}
+              height={25}
+              style={{ borderRadius: "100%" }}
+              className="object-contain absolute flex items-center justify-center group-hover:opacity-80 opacity-0 filter brightness-[10]"
             />
-          )}
+            {photoUrl ? (
+              <Image
+                src={photoUrl}
+                alt="image"
+                width={250}
+                height={250}
+                style={{ borderRadius: "100%" }}
+              />
+            ) : (
+              <Image
+                src="/assets/icons/profile.svg"
+                alt="profile"
+                width={40}
+                height={40}
+                style={{ objectFit: "contain" }}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      {/* <div className="mt-6"></div>
+      </div> */}
+    </>
   );
 };
 

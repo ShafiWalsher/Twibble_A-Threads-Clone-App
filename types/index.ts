@@ -1,3 +1,5 @@
+import { IUser } from "@/lib/database/models/user.model";
+
 // ====== USER PARAMS
 export type CreateUserParams = {
   clerkId: string;
@@ -5,131 +7,68 @@ export type CreateUserParams = {
   username: string;
   email: string;
   photoUrl: string;
-  bio?: string | "";
+  // bio?: string;
+  // onboarded?: boolean;
+  // threads?: string[]; // Assuming threads is an array of thread IDs (string)
 };
 
 export type UpdateUserParams = {
-  firstName: string;
-  username: string;
-  photoUrl: string;
-  bio?: string | "";
-};
-
-// ====== EVENT PARAMS
-export type CreateEventParams = {
-  userId: string;
-  event: {
-    title: string;
-    description: string;
-    location: string;
-    imageUrl: string;
-    startDateTime: Date;
-    endDateTime: Date;
-    categoryId: string;
-    price: string;
-    isFree: boolean;
-    url: string;
-  };
-  path: string;
-};
-
-export type UpdateEventParams = {
-  userId: string;
-  event: {
-    _id: string;
-    title: string;
-    imageUrl: string;
-    description: string;
-    location: string;
-    startDateTime: Date;
-    endDateTime: Date;
-    categoryId: string;
-    price: string;
-    isFree: boolean;
-    url: string;
-  };
-  path: string;
-};
-
-export type DeleteEventParams = {
-  eventId: string;
-  path: string;
-};
-
-export type GetAllEventsParams = {
-  query: string;
-  category: string;
-  limit: number;
-  page: number;
-};
-
-export type GetEventsByUserParams = {
-  userId: string;
-  limit?: number;
-  page: number;
-};
-
-export type GetRelatedEventsByCategoryParams = {
-  categoryId: string;
-  eventId: string;
-  limit?: number;
-  page: number | string;
-};
-
-export type Event = {
   _id: string;
-  title: string;
-  description: string;
-  price: string;
-  isFree: boolean;
-  imageUrl: string;
-  location: string;
-  startDateTime: Date;
-  endDateTime: Date;
-  url: string;
-  organizer: {
-    _id: string;
+  user: {
     firstName: string;
-    lastName: string;
+    username: string;
+    photoUrl: string;
+    bio?: string | "";
+    onboarded: boolean;
   };
-  category: {
-    _id: string;
-    name: string;
-  };
 };
 
-// ====== CATEGORY PARAMS
-export type CreateCategoryParams = {
-  categoryName: string;
-};
+// ====== USERINFO PARAMS
+export interface UserInfoParams {
+  _id: string;
+  clerkId: string;
+  email: string;
+  username: string;
+  firstName: string;
+  photoUrl?: string;
+  bio?: string;
+  threads: string[];
+  onboarded: boolean;
+}
 
-// ====== ORDER PARAMS
-export type CheckoutOrderParams = {
-  eventTitle: string;
-  eventId: string;
-  price: string;
-  isFree: boolean;
-  buyerId: string;
-};
-
-export type CreateOrderParams = {
-  stripeId: string;
-  eventId: string;
-  buyerId: string;
-  totalAmount: string;
+// ====== THREADCARD PARAMS
+export interface ThreadCardProps {
+  postId: string;
+  currentUserId: string;
+  parentId: string | null;
+  content: string;
+  author: IUser;
   createdAt: Date;
-};
+  comments?: IComment[];
+  isComment?: boolean;
+}
 
-export type GetOrdersByEventParams = {
-  eventId: string;
-  searchString: string;
-};
+// FETCH ALL POSTS PARAMS
+export interface IComment {
+  _id: string;
+  thread_text: string;
+  author: IUser;
+  createdAt: Date;
+}
 
-export type GetOrdersByUserParams = {
-  userId: string | null;
-  limit?: number;
-  page: string | number | null;
-};
+export interface IPost {
+  _id: string;
+  thread_text: string;
+  author: IUser;
+  createdAt: Date;
+  parentId?: string;
+  comments?: IComment[];
+}
+
+export interface IFetchPostsResult {
+  posts: IPost[];
+  isNext: boolean;
+}
 
 // ====== URL QUERY PARAMS
 export type UrlQueryParams = {

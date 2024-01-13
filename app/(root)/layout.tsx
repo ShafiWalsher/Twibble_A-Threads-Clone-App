@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "../globals.css";
 import Topbar from "@/components/shared/Topbar";
 import Bottombar from "@/components/shared/Bottombar";
+import { Suspense } from "react";
+import Loading from "@/components/shared/Load";
 
 export const metadata: Metadata = {
   title: "Twibble - A Threads Clone",
@@ -14,10 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-5xl relative mx-auto flex h-screen flex-col">
-      <Topbar />
-      <main className="flex-1">{children}</main>
-      <Bottombar />
+    <div className="flex w-full h-screen flex-col relative">
+      <Suspense fallback={<Loading />}>
+        <Topbar />
+        <main className="main-container">{children}</main>
+        <Bottombar />
+      </Suspense>
     </div>
   );
 }

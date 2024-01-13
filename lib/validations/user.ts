@@ -2,7 +2,7 @@ import * as z from "zod";
 
 export const UserValidation = z.object({
   photoUrl: z.string().url({ message: "Invalid url" }),
-  name: z
+  firstName: z
     .string()
     .min(5, {
       message: "Name must be at least 5 characters.",
@@ -16,8 +16,5 @@ export const UserValidation = z.object({
     .max(20, { message: "Username must be less than 20 characters." }),
   bio: z
     .string()
-    .min(10, {
-      message: "Bio must be at least 10 characters.",
-    })
-    .max(1000, { message: "Bio must be less than 1000 characters." }),
+    .max(150, { message: "Bio must be less than 150 characters." }),
 });

@@ -1,27 +1,20 @@
-import { Schema, Types, model, models } from "mongoose";
+import { Document, Schema, model, models, Types } from "mongoose";
+import { IUser } from "./user.model";
 
 export interface IThread extends Document {
-  _id: string; // created by mongoose
   thread_text: string;
-  author: Types.ObjectId;
+  author: Types.ObjectId | IUser;
   createdAt: Date;
-  imageUrls: string[];
   parentId?: string;
-  comment?: Types.ObjectId[];
+  comments?: Types.ObjectId[];
 }
 
-const threadSchema = new Schema({
+const threadSchema = new Schema<IThread>({
   thread_text: { type: String, required: true },
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  createdAt: { type: Date, default: Date.now() },
-  imageUrls: [{ type: String }], // might include multiple images
+  author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  createdAt: { type: Date, default: Date.now },
   parentId: { type: String },
-  comment: [
-    // a thread can have nultiple comments
+  comments: [
     {
       type: Schema.Types.ObjectId,
       ref: "Thread",

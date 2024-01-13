@@ -5,11 +5,6 @@ export const menuLinks = [
     label: "Home For You",
   },
   {
-    imgURL: "/assets/icons/home-following.svg",
-    route: "/",
-    label: "Home Following",
-  },
-  {
     imgURL: "/assets/icons/search.svg",
     route: "/search",
     label: "Search",
@@ -34,7 +29,7 @@ export const menuLinks = [
 export const profileTabs = [
   { value: "threads", label: "Threads", icon: "/assets/icons/reply.svg" },
   { value: "replies", label: "Replies", icon: "/assets/icons/members.svg" },
-  { value: "tagged", label: "Tagged", icon: "/assets/icons/tag.svg" },
+  { value: "reposts", label: "Reposts", icon: "/assets/icons/repost.svg" },
 ];
 
 export const menuItems = [
@@ -47,7 +42,20 @@ export const menuItems = [
 
 export const profileDefaultValues = {
   photoUrl: "",
-  name: "",
+  firstName: "",
   username: "",
   bio: "",
 };
+
+export const profilePictures = [
+  { src: "/assets/profilepps/image1.jpg", label: "image1" },
+  { src: "/assets/profilepps/image2.jpg", label: "image2" },
+  { src: "/assets/profilepps/image3.jpg", label: "image3" },
+];
+
+export const threatInteractIcons = [
+  { src: "/assets/icons/heart-white.svg", label: "heart" },
+  { src: "/assets/icons/chat.svg", label: "reply" },
+  { src: "/assets/icons/repost.svg", label: "repost" },
+  { src: "/assets/icons/share.svg", label: "share" },
+];

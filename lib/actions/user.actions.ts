@@ -2,7 +2,7 @@
 
 import { CreateUserParams, UpdateUserParams } from "@/types";
 import { handleError } from "../utils";
-import User from "../database/models/user.model";
+import User, { IUser } from "../database/models/user.model";
 import { connectToDatabase } from "../database";
 import Thread from "../database/models/thread.model";
 import { revalidatePath } from "next/cache";
@@ -11,8 +11,6 @@ import { revalidatePath } from "next/cache";
 export const createUser = async (user: CreateUserParams) => {
   try {
     await connectToDatabase();
-
-    console.log({ ConnectedToDB: true });
 
     const newUser = await User.create(user);
 
@@ -23,13 +21,37 @@ export const createUser = async (user: CreateUserParams) => {
 };
 
 //   Find User
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string | undefined) {
   try {
+    if (!userId) {
+      throw new Error("User ID is undefined");
+    }
+
     await connectToDatabase();
 
     const user = await User.findById(userId);
 
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// Find User by clerkId
+export async function getUserByClerkId(clerkId: string | undefined) {
+  try {
+    if (!clerkId) {
+      throw new Error("clerkId is undefined");
+    }
+
+    await connectToDatabase(); // Assuming you have a function to connect to the database
+
+    const user = await User.findOne({ clerkId }).exec();
+
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     handleError(error);
@@ -37,11 +59,11 @@ export async function getUserById(userId: string) {
 }
 
 // Update User
-export async function updateUser(clerkId: string, user: UpdateUserParams) {
+export async function updateUser({ _id, user }: UpdateUserParams) {
   try {
     await connectToDatabase();
 
-    const updatedUser = await User.findOneAndUpdate({ clerkId }, user, {
+    const updatedUser = await User.findOneAndUpdate({ _id }, user, {
       new: true,
     });
 
