@@ -1,8 +1,11 @@
-import { profilePictures, threatInteractIcons } from "@/constants";
+import { profilePictures, threadInteractIcons } from "@/constants";
 import { formatPostCreationTime } from "@/lib/utils";
 import { ThreadCardProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import CarouselCard from "./CarouselCard";
+import { Suspense } from "react";
+import LoadThread from "../shared/LoadThread";
 
 // import DeleteThread from "../forms/DeleteThread";
 
@@ -11,6 +14,7 @@ function ThreadCard({
   currentUserId,
   parentId,
   content,
+  attachments,
   author,
   createdAt,
   comments,
@@ -18,6 +22,8 @@ function ThreadCard({
 }: ThreadCardProps) {
   const totalReplies: number = 221;
   const totalLikes: number = 3251;
+
+  // console.log({ attachments });
 
   return (
     <div
@@ -28,16 +34,17 @@ function ThreadCard({
       <div className="flex items-start justify-between">
         <div className="flex w-full flex-1 flex-row gap-3 ">
           <div className="flex flex-col items-center">
+            {/* User Profile */}
             <Link href={`/profile/${author.id}`} className="relative h-9 w-9">
               <Image
                 src={author?.photoUrl || ""}
-                alt="user_community_image"
+                alt="user profile"
                 fill
                 className="cursor-pointer rounded-full"
               />
               <Image
                 src="/assets/icons/plus.svg"
-                alt="user_community_image"
+                alt="plus icon"
                 width={22}
                 height={22}
                 className="object-contain absolute -bottom-1 -right-1"
@@ -47,6 +54,7 @@ function ThreadCard({
             <div className="thread-card_bar" />
           </div>
 
+          {/* Username */}
           <div className="flex w-full flex-col">
             <Link href={`/profile/${author.id}`} className="w-fit">
               <h4 className="cursor-pointer text-base-semibold text-light-1 hover:underline">
@@ -55,14 +63,25 @@ function ThreadCard({
             </Link>
 
             {/* Thread Content */}
-            <p className=" mt-2 text-small-regular text-light-2 cursor-text">
-              {content}
-            </p>
+            {attachments && attachments.length > 0 ? (
+              <>
+                <p className=" mt-2 text-small-regular text-light-2 cursor-text">
+                  {content}
+                </p>
+                <div className="my-3">
+                  <CarouselCard attachments={attachments} />
+                </div>
+              </>
+            ) : (
+              <p className=" mt-2 text-small-regular text-light-2 cursor-text">
+                {content}
+              </p>
+            )}
 
-            <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
+            <div className={`${isComment && "mb-10"} mt-1 flex flex-col gap-3`}>
               <div className="flex">
                 {/* Thread Interact Icons */}
-                {threatInteractIcons.map((image) => (
+                {threadInteractIcons.map((image) => (
                   <div
                     key={image.label}
                     className="h-9 w-9 rounded-full hover:bg-dark-4 flex items-center justify-center"
@@ -71,8 +90,8 @@ function ThreadCard({
                       <Image
                         src={image.src}
                         alt={image.label}
-                        width={20}
-                        height={20}
+                        width={22}
+                        height={22}
                         className=" cursor-pointer object-contain"
                       />
                     </div>
@@ -91,18 +110,21 @@ function ThreadCard({
             </div>
           </div>
         </div>
+
+        {/* Time and More Options */}
         <div className="text-light-1">
-          <div className="flex gap-3 items-center justify-center">
+          <div className="flex gap-1 items-center justify-center">
             <p className="text-gray-1 text-base-medium">
               {formatPostCreationTime(createdAt)}
             </p>
-            <Image
-              src="/assets/icons/menu-dots.svg"
-              alt="menu"
-              width={14}
-              height={14}
-              className="object-contain"
-            />
+            <div className="relative h-5 w-5 px-2 py-1 rounded-full hover:bg-dark-4">
+              <Image
+                src="/assets/icons/menu-dots-gray.svg"
+                alt="menu"
+                fill
+                className="object-contain cursor-pointer"
+              />
+            </div>
           </div>
         </div>
 

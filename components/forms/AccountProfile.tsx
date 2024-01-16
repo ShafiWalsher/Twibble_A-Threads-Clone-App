@@ -106,7 +106,7 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
             control={form.control}
             name="photoUrl"
             render={({ field }) => (
-              <FormItem className="w-full flex gap-8">
+              <FormItem className="w-full flex gap-8 items-center">
                 <FormControl className="h-[150px]">
                   <FileUploader
                     onFieldChange={field.onChange}
@@ -115,7 +115,7 @@ const AccountProfile = ({ user, btnTitle, type }: Props) => {
                   />
                 </FormControl>
                 <div className="flex flex-col">
-                  <div className="mt-6 text-light-2/90">
+                  <div className=" text-light-2/90">
                     <p className=" text-body-bold">{user.firstName}</p>
                     <p className="text-base-regular">@{user.username}</p>
                   </div>

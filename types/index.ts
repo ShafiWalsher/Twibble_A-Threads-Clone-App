@@ -42,6 +42,7 @@ export interface ThreadCardProps {
   currentUserId: string;
   parentId: string | null;
   content: string;
+  attachments?: string[];
   author: IUser;
   createdAt: Date;
   comments?: IComment[];
@@ -59,6 +60,7 @@ export interface IComment {
 export interface IPost {
   _id: string;
   thread_text: string;
+  attachments: string[];
   author: IUser;
   createdAt: Date;
   parentId?: string;
@@ -69,6 +71,19 @@ export interface IFetchPostsResult {
   posts: IPost[];
   isNext: boolean;
 }
+
+// USERCARD PROPS
+// export interface UserCardProps {
+//   postId: string;
+//   currentUserId: string;
+//   parentId: string | null;
+//   content: string;
+//   attachments?: string[];
+//   author: IUser;
+//   createdAt: Date;
+//   comments?: IComment[];
+//   isComment?: boolean;
+// }
 
 // ====== URL QUERY PARAMS
 export type UrlQueryParams = {

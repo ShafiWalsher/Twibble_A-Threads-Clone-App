@@ -43,6 +43,13 @@ function ProfileHeader({ currUserClerkId, userInfo }: Props) {
           </div>
         </div>
 
+        {/* Bio */}
+        {userInfo.bio && (
+          <div className="w-4/5">
+            <p className=" text-base-medium text-light-2">{userInfo?.bio}</p>
+          </div>
+        )}
+
         {/* Followers and Insta and More Icons */}
         <div className="flex justify-between items-center">
           <Link href="">
@@ -71,13 +78,6 @@ function ProfileHeader({ currUserClerkId, userInfo }: Props) {
             </Link>
           </div>
         </div>
-
-        {/* Bio */}
-        {!userInfo.bio && (
-          <p className=" text-base-medium text-light-2">
-            {userInfo?.bio} Something of bio
-          </p>
-        )}
 
         {/* Follow - Mention or Edit Profile */}
         {currUserClerkId === userInfo.clerkId ? (

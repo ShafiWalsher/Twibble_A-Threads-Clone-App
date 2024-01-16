@@ -39,28 +39,32 @@ html {
 
   /* thread card  */
   .thread-card_bar {
-    @apply relative mx-auto z-20 mt-2 w-0.5 grow rounded-full bg-gray-1/70;
+    @apply relative mx-auto z-20 mt-2 w-0.5 grow rounded-full bg-gray-1/50;
   }
 
   /* User card */
   .user-card {
-    @apply flex flex-col justify-between gap-4 max-xs:rounded-xl max-xs:bg-dark-3 max-xs:p-4 xs:flex-row xs:items-center;
+    @apply flex flex-col items-start justify-between gap-4 max-xs:rounded-xl max-xs:bg-dark-3 max-xs:p-4 xs:flex-row xs:items-center;
   }
 
-  .user-card_avatar {
-    @apply flex flex-1 items-start justify-start gap-3 xs:items-center;
+  .user-card_username {
+    @apply flex flex-1 items-center justify-start gap-3;
   }
 
   .user-card_btn {
-    @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-[12px] text-light-1 !important;
+    @apply rounded-lg bg-transparent text-base-bold text-light-1 border border-gray-1/80 px-4 py-2 hover:shadow-md hover:shadow-gray-1/20 !important;
   }
 
   .searchbar {
-    @apply flex gap-1 rounded-lg bg-dark-3 px-4 py-2;
+    @apply flex gap-1 bg-dark-5 px-4 py-2.5 border border-gray-1/30 transition-all duration-75 ease-linear !important;
   }
 
   .searchbar_input {
-    @apply border-none bg-dark-3 text-base-regular text-light-4 outline-none !important;
+    @apply border-none bg-dark-5 text-base-medium text-light-1 placeholder:text-gray-1 outline-none !important;
+  }
+
+  .searchbar_input-modal {
+    @apply bg-dark-5 max-h-[480px] w-full flex-col border border-gray-1/30 border-t-0 rounded-b-2xl py-1 transition-all duration-75 !important;
   }
 
   .topbar {
@@ -71,8 +75,12 @@ html {
     @apply py-4 px-8 rounded-lg !important;
   }
 
-  .ham-menu_text {
-    @apply px-5 py-3 text-light-1 text-small-semibold w-full;
+  .ham-menu_link {
+    @apply h-full w-full  !important;
+  }
+
+  .ham-menu_link-text {
+    @apply text-light-1 px-3 py-2 text-base-semibold border-b border-b-gray-1/50 !important;
   }
 
   .special-btn {
@@ -92,7 +100,7 @@ html {
   }
 
   .topbar_link {
-    @apply relative flex justify-start rounded-lg py-4 px-10 hover:bg-dark-4/70 transition-all duration-75;
+    @apply relative flex justify-start rounded-lg py-6 px-10 hover:bg-dark-4/70 transition-all duration-75;
   }
 
   .pagination {
@@ -199,4 +207,54 @@ html {
 /* Profile Tabs */
 div[role="tabpanel"][data-state="inactive"] {
   display: none;
+}
+
+/* Carousel Classes */
+.carousel-btn {
+  @apply bg-dark-4 border-none text-gray-1 -ml-10 h-12 w-12 opacity-0 group-hover:opacity-100 hover:bg-gray-1/30 hover:text-light-1/50 transition-all duration-75 !important;
+}
+
+.carousel-item {
+  @apply my-2 max-w-fit !important;
+}
+
+.carousel-card {
+  @apply p-0 w-fit h-full border-0 bg-transparent !important;
+}
+
+.carousel-card_content {
+  @apply bg-transparent relative h-[430px] w-full rounded-lg border-none p-0 flex gap-0 !important;
+}
+
+/* Loading Spinners */
+.ring-loader {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid #5c5c7b;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+.ring-loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left: 4px solid #777777;
+  border-bottom: 4px solid transparent;
+  animation: rotation 0.5s linear infinite reverse;
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

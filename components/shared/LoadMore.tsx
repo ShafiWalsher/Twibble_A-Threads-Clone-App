@@ -1,8 +1,7 @@
 "use client";
 import { fetchPosts } from "@/lib/actions/thread.actions";
-import { IFetchPostsResult, IPost } from "@/types";
+import { IPost } from "@/types";
 import { useEffect, useState } from "react";
-// import { fetchPosts } from "@/lib/actions/thread.actions";
 import { useInView } from "react-intersection-observer";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import ThreadCard from "../cards/ThreadCard";
@@ -38,9 +37,7 @@ const LoadMore = ({ initialPosts, userId }: LoadMoreProps) => {
   return (
     <>
       <div className="flex items-center justify-center flex-col w-full ">
-        {posts?.length === 0 ? (
-          <p className="no-result">No threads found</p>
-        ) : (
+        {posts?.length > 0 && (
           <>
             {posts?.map((post: IPost) => (
               <ThreadCard
@@ -49,6 +46,7 @@ const LoadMore = ({ initialPosts, userId }: LoadMoreProps) => {
                 currentUserId={userId}
                 parentId={post.parentId || ""}
                 content={post.thread_text}
+                attachments={post.attachments}
                 author={post.author}
                 createdAt={post.createdAt}
                 comments={post.comments}

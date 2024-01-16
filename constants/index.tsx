@@ -53,7 +53,7 @@ export const profilePictures = [
   { src: "/assets/profilepps/image3.jpg", label: "image3" },
 ];
 
-export const threatInteractIcons = [
+export const threadInteractIcons = [
   { src: "/assets/icons/heart-white.svg", label: "heart" },
   { src: "/assets/icons/chat.svg", label: "reply" },
   { src: "/assets/icons/repost.svg", label: "repost" },

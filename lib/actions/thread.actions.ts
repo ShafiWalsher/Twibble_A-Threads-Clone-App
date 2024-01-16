@@ -8,18 +8,25 @@ import { connectToDatabase } from "../database";
 import { handleError } from "../utils";
 
 interface Params {
-  thread_text: string;
+  thread_text: string | null | undefined;
   author: string;
   path: string;
+  fileUrls: string[];
 }
 
-export async function createThread({ thread_text, author, path }: Params) {
+export async function createThread({
+  thread_text,
+  author,
+  path,
+  fileUrls,
+}: Params) {
   try {
     connectToDatabase();
 
     const createdThread = await Thread.create({
       thread_text,
       author,
+      attachments: fileUrls,
     });
 
     // Update User model
@@ -35,7 +42,7 @@ export async function createThread({ thread_text, author, path }: Params) {
 
 export async function fetchPosts({
   page,
-  limit = 4,
+  limit = 8,
 }: {
   page: number;
   limit?: number;
@@ -57,6 +64,7 @@ export async function fetchPosts({
       })
       .populate({
         path: "comments", // Populate the children field
+        model: Thread,
         populate: {
           path: "author", // Populate the author field within children
           model: User,
@@ -79,6 +87,137 @@ export async function fetchPosts({
     };
   } catch (error) {
     handleError(error);
+  }
+}
+
+// export async function fetchUserPostsOld(userId: string) {
+//   try {
+//     connectToDatabase();
+
+//     // Find all threads authored by the user with the given userId
+//     const threads = await User.findOne({ _id: userId }).populate({
+//       path: "threads",
+//       model: Thread,
+//       populate: [
+//         {
+//           path: "comments",
+//           model: Thread,
+//           populate: {
+//             path: "author",
+//             model: User,
+//             select: "_id username parentId photoUrl", //
+//           },
+//         },
+//       ],
+//     });
+//     return threads;
+//   } catch (error) {
+//     console.error("Error fetching user threads:", error);
+//     throw error;
+//   }
+// }
+
+export async function fetchUserPostsOld({
+  userId,
+  page = 1,
+  limit = 10,
+  sort = "desc",
+}: {
+  userId: string;
+  page?: number;
+  limit?: number;
+  sort?: "asc" | "desc";
+}) {
+  try {
+    connectToDatabase();
+
+    // Calculate the number of threads to skip based on the page number and page size.
+    const skipAmount = (page - 1) * limit;
+
+    // Create a query to fetch threads authored by the user with the given userId.
+    const threadsQuery = Thread.find({ author: userId })
+      .sort({ createdAt: sort })
+      .skip(skipAmount)
+      .limit(limit)
+      .populate({
+        path: "author",
+        model: User,
+      })
+      .populate({
+        path: "comments",
+        model: Thread,
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id username parentId photoUrl",
+        },
+      });
+
+    // Count the total number of threads authored by the user.
+    const totalThreadsCount = await Thread.countDocuments({ author: userId });
+
+    const threads = await threadsQuery.exec();
+
+    const isNext = totalThreadsCount > skipAmount + threads.length;
+
+    return {
+      threads: JSON.parse(JSON.stringify(threads)),
+      isNext,
+    };
+  } catch (error) {
+    console.error("Error fetching user threads:", error);
+    throw error;
+  }
+}
+
+export async function fetchUserPosts({
+  userId,
+  page = 1,
+  limit = 8,
+}: {
+  userId: string;
+  page?: number;
+  limit?: number;
+}) {
+  try {
+    connectToDatabase();
+
+    // Calculate the number of threads to skip based on the page number and page size.
+    const skipAmount = (page - 1) * limit;
+
+    // Find all threads authored by the user with the given userId, sorted by createdAt in descending order.
+    const threadsQuery = Thread.find({ author: userId })
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(limit)
+      .populate({
+        path: "comments",
+        model: Thread,
+        populate: {
+          path: "author",
+          model: User,
+          select: "_id username parentId photoUrl",
+        },
+      });
+    // .populate({
+    //   path: "author",
+    //   model: User,
+    // });
+
+    // Count the total number of threads authored by the user.
+    const totalThreadsCount = await Thread.countDocuments({ author: userId });
+
+    const threads = await threadsQuery.exec();
+
+    const isNext = totalThreadsCount > skipAmount + threads.length;
+
+    return {
+      threads: JSON.parse(JSON.stringify(threads)),
+      isNext,
+    };
+  } catch (error) {
+    console.error("Error fetching user threads:", error);
+    throw error;
   }
 }
 

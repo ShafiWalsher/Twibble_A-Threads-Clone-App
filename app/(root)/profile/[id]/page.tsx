@@ -1,7 +1,11 @@
+import ThreadCard from "@/components/cards/ThreadCard";
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
+import { fetchUserPosts } from "@/lib/actions/thread.actions";
 import { getUserByClerkId, getUserById } from "@/lib/actions/user.actions";
+import { IThread } from "@/lib/database/models/thread.model";
+import { IPost } from "@/types";
 import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -17,6 +21,12 @@ const Page = async ({ params }: { params: { id: string } }) => {
   //   console.log({ currUser });
   // console.log({ userInfo });
 
+  const result = await fetchUserPosts({ userId: params.id });
+
+  // const author = result.threads.author;
+
+  console.log(result.threads);
+
   return (
     <section className="h-full w-full flex flex-1 flex-col">
       <ProfileHeader currUserClerkId={currUserClerkId} userInfo={userInfo} />
@@ -27,39 +37,106 @@ const Page = async ({ params }: { params: { id: string } }) => {
               {profileTabs.map((tab) => (
                 <TabsTrigger key={tab.label} value={tab.value} className="tab">
                   <p>{tab.label}</p>
-                  {/* {tab.label === "Threads" &&
-                      userInfo.threads.length === 0 && (
-                        <p className="ml-1 rounded-sm bg-gray-1/70 px-2 py-1 !text-tiny-medium text-light-2">
-                          {userInfo.threads.length}
-                        </p>
-                      )} */}
+                  {tab.label === "Threads" && userInfo.threads.length !== 0 && (
+                    <p className="ml-1 text-small-medium text-gray-1">
+                      {userInfo.threads.length}
+                    </p>
+                  )}
                 </TabsTrigger>
               ))}
             </div>
             <div className="h-0.5 bg-gray-1/20 w-full" />
           </div>
         </TabsList>
-        {profileTabs.map((tab) => (
-          <TabsContent
-            key={`content-${tab.label}`}
-            value={tab.value}
-            className="w-full mt-4 flex-1 flex items-center justify-center"
-          >
-            {userInfo.threads.length === 0 ? (
-              <div className="h-full flex-1 flex items-center justify-center">
-                <p className="text-light-1">{`No ${tab.label.toLocaleLowerCase()} yet.`}</p>
+        {/* Thread Tab Content */}
+        <TabsContent
+          value="threads"
+          className="w-full mt-4 flex-1 flex items-center justify-center"
+        >
+          {userInfo.threads.length === 0 ? (
+            <div className="h-full flex-1 flex items-center justify-center">
+              <p className="text-light-1">No threads yet.</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col">
+                {result.threads.map((thread: IPost) => (
+                  <ThreadCard
+                    key={thread._id}
+                    postId={thread._id}
+                    currentUserId={userInfo._id}
+                    parentId={thread.parentId || ""}
+                    content={thread.thread_text}
+                    attachments={thread.attachments}
+                    author={userInfo}
+                    createdAt={thread.createdAt}
+                    comments={thread.comments}
+                  />
+                ))}
               </div>
-            ) : (
-              <p>ThreadCard</p>
-              // @ts-ignore
-              // <ThreadsTab
-              //       userId={userInfo._id}
-              //       clerkId={userInfo.clerkId}
-              //       accountType="User"
-              //     />
-            )}
-          </TabsContent>
-        ))}
+            </>
+          )}
+        </TabsContent>
+
+        {/* Replies Tab Content */}
+        <TabsContent
+          value="replies"
+          className="w-full mt-4 flex-1 flex items-center justify-center"
+        >
+          {true ? (
+            <div className="h-full flex-1 flex items-center justify-center">
+              <p className="text-light-1">No replies yet.</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col">
+                {/* {result.threads.map((thread: IPost) => (
+                  <ThreadCard
+                    key={thread._id}
+                    postId={thread._id}
+                    currentUserId={userInfo._id}
+                    parentId={thread.parentId || ""}
+                    content={thread.thread_text}
+                    attachments={thread.attachments}
+                    author={userInfo}
+                    createdAt={thread.createdAt}
+                    comments={thread.comments}
+                  />
+                ))} */}
+              </div>
+            </>
+          )}
+        </TabsContent>
+
+        {/* Reposts Tap Content */}
+        <TabsContent
+          value="reposts"
+          className="w-full mt-4 flex-1 flex items-center justify-center"
+        >
+          {true ? (
+            <div className="h-full flex-1 flex items-center justify-center">
+              <p className="text-light-1">No reposts yet.</p>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-col">
+                {/* {result.threads.map((thread: IPost) => (
+                  <ThreadCard
+                    key={thread._id}
+                    postId={thread._id}
+                    currentUserId={userInfo._id}
+                    parentId={thread.parentId || ""}
+                    content={thread.thread_text}
+                    attachments={thread.attachments}
+                    author={userInfo}
+                    createdAt={thread.createdAt}
+                    comments={thread.comments}
+                  />
+                ))} */}
+              </div>
+            </>
+          )}
+        </TabsContent>
       </Tabs>
     </section>
   );

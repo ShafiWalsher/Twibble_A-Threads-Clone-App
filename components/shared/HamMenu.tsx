@@ -27,30 +27,32 @@ const HamMenu = () => {
           />
         </PopoverTrigger>
         <PopoverContent className="p-0 w-fit mr-7 rounded-xl bg-dark-2 border-0">
-          <div className="flex flex-col w-full">
-            {menuItems.map((item, index) => (
-              <div key={index}>
-                {item.value === "Logout" ? (
-                  <SignedIn>
+          <SignedIn>
+            <div className="flex flex-col gap-2 pt-2 w-full">
+              {menuItems.map((item, index) => (
+                <div key={index}>
+                  {item.value === "Logout" ? (
                     <Link
                       onClick={() => signOut(() => router.push("/sign-in"))}
                       href={item.href}
                       key={index}
-                      className="ham-menu_text"
+                      className="ham-menu_link"
                     >
-                      Logout
+                      <p className="ham-menu_link-text border-none">Logout</p>
                     </Link>
-                  </SignedIn>
-                ) : (
-                  <Link href={item.href} key={index} className="ham-menu_text">
-                    {item.value}
-                  </Link>
-                )}
-
-                <div className="m-0 p-0 last:h-0 h-0.5 bg-light-4/30 w-full" />
-              </div>
-            ))}
-          </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      key={index}
+                      className="ham-menu_link"
+                    >
+                      <p className="ham-menu_link-text">{item.value}</p>
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
+          </SignedIn>
         </PopoverContent>
       </Popover>
     </div>

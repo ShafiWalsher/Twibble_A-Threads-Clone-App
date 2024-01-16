@@ -2,8 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { createThread } from "@/lib/actions/thread.actions";
+import { useUploadThing } from "@/lib/uploadthing";
+import AttachmentUploader from "../shared/AttachmentUploader";
 import NewThreadForm from "./NewThreadForm";
 
 interface Props {

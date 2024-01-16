@@ -2,7 +2,9 @@ import { Document, Schema, model, models, Types } from "mongoose";
 import { IUser } from "./user.model";
 
 export interface IThread extends Document {
-  thread_text: string;
+  _id: string;
+  thread_text?: string;
+  attachments?: string[];
   author: Types.ObjectId | IUser;
   createdAt: Date;
   parentId?: string;
@@ -10,10 +12,16 @@ export interface IThread extends Document {
 }
 
 const threadSchema = new Schema<IThread>({
-  thread_text: { type: String, required: true },
+  thread_text: {
+    type: String,
+    required: false,
+  },
+  attachments: [{ type: String }],
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   createdAt: { type: Date, default: Date.now },
-  parentId: { type: String },
+  parentId: {
+    type: String,
+  },
   comments: [
     {
       type: Schema.Types.ObjectId,

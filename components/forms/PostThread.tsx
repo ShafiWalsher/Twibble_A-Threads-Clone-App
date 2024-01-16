@@ -1,82 +1,65 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { useOrganization } from "@clerk/nextjs";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-
-import { ThreadValidation } from "@/lib/validations/thread";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { createThread } from "@/lib/actions/thread.actions";
+import { Button } from "../ui/button";
+import { useUploadThing } from "@/lib/uploadthing";
+import AttachmentUploader from "../shared/AttachmentUploader";
+import NewThreadForm from "./NewThreadForm";
 
 interface Props {
-  userId: string;
+  userInfo: {
+    _id: string;
+    username: string;
+    photoUrl?: string;
+  };
 }
 
-function PostThread({ userId }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const { organization } = useOrganization();
-
-  const form = useForm<z.infer<typeof ThreadValidation>>({
-    resolver: zodResolver(ThreadValidation),
-    defaultValues: {
-      thread: "",
-      accountId: userId,
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
-    await createThread({
-      text: values.thread,
-      author: userId,
-      communityId: organization ? organization.id : null,
-      path: pathname,
-    });
-
-    router.push("/");
+const PostThread = ({ userInfo }: Props) => {
+  const userData = {
+    userId: userInfo._id,
+    username: userInfo.username,
+    photoUrl: userInfo.photoUrl || "",
   };
 
   return (
-    <Form {...form}>
-      <form
-        className="mt-10 flex flex-col justify-start gap-10"
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <FormField
-          control={form.control}
-          name="thread"
-          render={({ field }) => (
-            <FormItem className="flex w-full flex-col gap-3">
-              <FormLabel className="text-base-semibold text-light-2">
-                Content
-              </FormLabel>
-              <FormControl className="no-focus border border-dark-4 bg-dark-3 text-light-1">
-                <Textarea rows={15} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="bg-primary-500">
-          Post Thread
-        </Button>
-      </form>
-    </Form>
+    <Dialog>
+      <DialogTrigger asChild>
+        <div className="w-full flex items-center justify-center px-3 py-2 gap-2 mb-2">
+          <div className="relative h-9 w-9 rounded-full">
+            <Image
+              src={userInfo?.photoUrl ?? ""}
+              alt="profile pic"
+              fill
+              className="objecti-contain rounded-full"
+            />
+          </div>
+          <div className="flex-1 w-full">
+            <span className="text-gray-1 text-base-regular">
+              Start a thread...
+            </span>
+          </div>
+          <div className="">
+            <Button className="text-dark-1 text-base-semibold  py-3 px-4 rounded-full cursor-not-allowed bg-light-1/30 hover:bg-light-1/30">
+              Post
+            </Button>
+          </div>
+        </div>
+      </DialogTrigger>
+      <NewThreadForm userData={userData} />
+    </Dialog>
   );
-}
+};
 
 export default PostThread;
