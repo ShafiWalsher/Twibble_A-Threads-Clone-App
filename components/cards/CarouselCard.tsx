@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import {
   Carousel,
@@ -8,12 +7,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "../ui/card";
-import { Suspense } from "react";
-import LoadThread from "../shared/LoadThread";
 
-const CarouselCard = ({ attachments }: { attachments: string[] }) => {
+interface Props {
+  attachments: string[];
+}
+
+const CarouselCard = async ({ attachments }: Props) => {
   return (
-    <div className="h-full w-full flex items-start">
+    <div className="h-full w-full flex items-start ">
       {attachments.length > 1 ? (
         <Carousel
           opts={{
@@ -24,18 +25,16 @@ const CarouselCard = ({ attachments }: { attachments: string[] }) => {
           <CarouselContent className="w-full h-full">
             {attachments.map((imageUrl) => (
               <CarouselItem key={imageUrl} className="carousel-item">
-                <Card className="carousel-card ">
+                <Card className="carousel-card">
                   <CardContent className="carousel-card_content">
-                    <Suspense fallback={<LoadThread />}>
-                      <Image
-                        src={imageUrl}
-                        alt="userImage"
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        className="w-full h-full rounded-xl object-contain shadow-lg"
-                      />
-                    </Suspense>
+                    <Image
+                      src={imageUrl}
+                      alt="userImage"
+                      width={0}
+                      height={0}
+                      sizes="100dvw"
+                      className="w-full max-h-[440px] rounded-xl object-contain shadow-lg"
+                    />
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -46,20 +45,18 @@ const CarouselCard = ({ attachments }: { attachments: string[] }) => {
         </Carousel>
       ) : (
         <div className="h-full w-full">
-          <div className="max-w-max">
-            <Suspense fallback={<LoadThread />}>
-              {attachments.map((imageUrl, index) => (
-                <Image
-                  key={index}
-                  src={imageUrl}
-                  alt={`userImage-${index}`}
-                  width={0}
-                  height={0}
-                  sizes="100dvh"
-                  className="w-full max-h-[500px] object-contain rounded-xl"
-                />
-              ))}
-            </Suspense>
+          <div className="relative max-w-max">
+            {attachments.map((imageUrl, index) => (
+              <Image
+                key={index}
+                src={imageUrl}
+                alt={`userImage-${index}`}
+                width={0}
+                height={0}
+                sizes="100dvh"
+                className="w-full max-h-[440px] object-contain rounded-xl"
+              />
+            ))}
           </div>
         </div>
       )}

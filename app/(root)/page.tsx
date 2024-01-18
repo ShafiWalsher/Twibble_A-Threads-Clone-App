@@ -2,25 +2,17 @@ import ThreadCard from "@/components/cards/ThreadCard";
 import PostThread from "@/components/forms/PostThread";
 import LoadMore from "@/components/shared/LoadMore";
 import { fetchPosts } from "@/lib/actions/thread.actions";
-import { getUserByClerkId } from "@/lib/actions/user.actions";
-import { IPost, UserInfoParams } from "@/types";
-import { currentUser } from "@clerk/nextjs";
+import { fetchUserInfoData } from "@/lib/utils";
+import { IPost } from "@/types";
 import { redirect } from "next/navigation";
-import { postcss } from "tailwindcss";
 
 export default async function Home() {
-  const user = await currentUser();
-  const clerkId = user?.id;
-  const userInfo: UserInfoParams = await getUserByClerkId(clerkId);
+  const { userInfo, userData } = await fetchUserInfoData();
 
   if (!userInfo?.onboarded) redirect("/onboarding");
 
-  // console.log({ userInfo });
-
   let page = 1;
   const result = await fetchPosts({ page });
-
-  // console.log(result?.posts);
 
   return (
     <>
@@ -41,13 +33,26 @@ export default async function Home() {
                 author={post.author}
                 createdAt={post.createdAt}
                 comments={post.comments}
+                userData={userData}
               />
             ))}
           </>
         )}
       </div>
 
-      <LoadMore initialPosts={result?.posts} userId={userInfo._id} />
+      {result?.isNext ? (
+        <LoadMore
+          userData={userData}
+          initialPosts={result?.posts}
+          userId={userInfo._id}
+        />
+      ) : (
+        <div className="p-2 m-2 w-full flex items-center justify-center">
+          <p className="py-10 text-gray-1 text-base-semibold">
+            Peoples are still adding their thoughts!
+          </p>
+        </div>
+      )}
     </>
   );
 }

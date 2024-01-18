@@ -8,10 +8,15 @@ import ThreadCard from "../cards/ThreadCard";
 
 interface LoadMoreProps {
   initialPosts: IPost[];
-  userId: string; // Assuming initialPosts is an array of IPost
+  userId: string;
+  userData: {
+    userId: string;
+    username: string;
+    photoUrl: string;
+  };
 }
 
-const LoadMore = ({ initialPosts, userId }: LoadMoreProps) => {
+const LoadMore = ({ initialPosts, userId, userData }: LoadMoreProps) => {
   const { ref, inView } = useInView();
   const [posts, setPosts] = useState<IPost[]>(initialPosts);
   const [page, setPage] = useState(2);
@@ -50,6 +55,7 @@ const LoadMore = ({ initialPosts, userId }: LoadMoreProps) => {
                 author={post.author}
                 createdAt={post.createdAt}
                 comments={post.comments}
+                userData={userData}
               />
             ))}
           </>

@@ -1,4 +1,5 @@
 import { IUser } from "@/lib/database/models/user.model";
+import { Dispatch, SetStateAction } from "react";
 
 // ====== USER PARAMS
 export type CreateUserParams = {
@@ -47,6 +48,12 @@ export interface ThreadCardProps {
   createdAt: Date;
   comments?: IComment[];
   isComment?: boolean;
+  from?: "ThreadPage" | "HomePage";
+  userData: {
+    userId: string;
+    username: string;
+    photoUrl: string;
+  };
 }
 
 // FETCH ALL POSTS PARAMS
@@ -102,8 +109,37 @@ export type SearchParamProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-// ====== FEEDBACK PARAMS
-export type CreateFeedbackParams = {
-  name: string;
-  message: string;
-};
+// Add Comment Params
+export interface AddCommentParams {
+  postId: string;
+  parentId: string | null;
+  content: string;
+  attachments?: string[];
+  author: IUser;
+  createdAt: Date;
+  imgSrc?: string;
+  imgLabel?: string;
+  userData: {
+    userId: string;
+    username: string;
+    photoUrl: string;
+  };
+}
+
+// Add Comment Form Params
+export interface AddCommentFormParams {
+  postData: {
+    postId: string;
+    content: string;
+    attachments?: string[];
+    author: IUser;
+    createdAt: Date;
+  };
+  userData: {
+    userId: string;
+    username: string;
+    photoUrl: string;
+  };
+  parentId: string | null;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}

@@ -1,11 +1,11 @@
 import React from "react";
 
-const Loading = () => {
+const RippleLoading = () => {
   return (
-    <div className="w-full flex justify-center py-2">
-      <span className="ring-loader" />
+    <div className="w-full h-full flex justify-center py-2">
+      <span className="ripple-loader"></span>
     </div>
   );
 };
 
-export default Loading;
+export default RippleLoading;

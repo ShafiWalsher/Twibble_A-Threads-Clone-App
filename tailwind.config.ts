@@ -18,6 +18,17 @@ module.exports = withUt({
         "2xl": "1400px",
       },
     },
+    borderRadius: {
+      half: "50%",
+      none: "0",
+      sm: "0.125rem",
+      md: "0.375rem",
+      lg: "0.5rem",
+      xl: "0.75rem",
+      "2xl": "1rem",
+      "3xl": "0.75rem",
+      full: "9999px",
+    },
     fontSize: {
       "heading1-bold": [
         "36px",
@@ -228,8 +239,14 @@ module.exports = withUt({
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "reverse-spin": {
+          from: {
+            transform: "rotate(360deg)",
+          },
+        },
       },
       animation: {
+        "spin-reverse": "reverse-spin 1s linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

@@ -3,11 +3,9 @@ import ProfileHeader from "@/components/shared/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { profileTabs } from "@/constants";
 import { fetchUserPosts } from "@/lib/actions/thread.actions";
-import { getUserByClerkId, getUserById } from "@/lib/actions/user.actions";
-import { IThread } from "@/lib/database/models/thread.model";
+import { getUserById } from "@/lib/actions/user.actions";
 import { IPost } from "@/types";
 import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -18,17 +16,18 @@ const Page = async ({ params }: { params: { id: string } }) => {
   if (!currUserClerkId) redirect("/");
 
   const userInfo = await getUserById(params.id);
-  //   console.log({ currUser });
-  // console.log({ userInfo });
+  const userData = {
+    userId: userInfo?._id,
+    username: userInfo?.username || "",
+    firstName: userInfo?.firstName || "",
+    bio: userInfo?.bio || "",
+    photoUrl: userInfo?.photoUrl,
+  };
 
   const result = await fetchUserPosts({ userId: params.id });
 
-  // const author = result.threads.author;
-
-  console.log(result.threads);
-
   return (
-    <section className="h-full w-full flex flex-1 flex-col">
+    <section className=" h-full w-full flex flex-1 flex-col">
       <ProfileHeader currUserClerkId={currUserClerkId} userInfo={userInfo} />
       <Tabs defaultValue="threads" className="w-full flex-1 flex flex-col">
         <TabsList className="tab bg-transparent">
@@ -51,15 +50,15 @@ const Page = async ({ params }: { params: { id: string } }) => {
         {/* Thread Tab Content */}
         <TabsContent
           value="threads"
-          className="w-full mt-4 flex-1 flex items-center justify-center"
+          className="w-full mt-4 flex-1 flex items-center justify-center px-10"
         >
           {userInfo.threads.length === 0 ? (
-            <div className="h-full flex-1 flex items-center justify-center">
+            <div className="w-full h-full flex-1 flex items-center justify-center">
               <p className="text-light-1">No threads yet.</p>
             </div>
           ) : (
             <>
-              <div className="flex flex-col">
+              <div className="flex flex-col w-full">
                 {result.threads.map((thread: IPost) => (
                   <ThreadCard
                     key={thread._id}
@@ -71,6 +70,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
                     author={userInfo}
                     createdAt={thread.createdAt}
                     comments={thread.comments}
+                    userData={userData}
                   />
                 ))}
               </div>

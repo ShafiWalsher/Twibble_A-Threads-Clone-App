@@ -1,29 +1,21 @@
 "use client";
 import Image from "next/image";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AttachmentUploader from "../shared/AttachmentUploader";
 import Link from "next/link";
-import { DialogClose, DialogContent } from "../ui/dialog";
+import { DialogContent } from "../ui/dialog";
 import { useUploadThing } from "@/lib/uploadthing";
 import { usePathname } from "next/navigation";
-import { createThread } from "@/lib/actions/thread.actions";
+import { AddCommentFormParams } from "@/types";
+import CommentPostData from "../shared/CommentPostData";
+import { addCommentToThread } from "@/lib/actions/thread.actions";
 
-interface Props {
-  userData: {
-    userId: string;
-    username: string;
-    photoUrl: string;
-  };
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-const NewThreadForm = ({ userData, setOpen }: Props) => {
+const AddCommentForm = ({
+  userData,
+  parentId,
+  postData,
+  setOpen,
+}: AddCommentFormParams) => {
   const pathname = usePathname();
 
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -114,18 +106,20 @@ const NewThreadForm = ({ userData, setOpen }: Props) => {
       fileUrls = uploadedImages.map((image) => image.url);
     }
 
-    // create the new document
+    // Add Comment to The Thread
     if (fileUrls) {
-      await createThread({
-        thread_text: draftThread,
-        author: userData.userId,
+      await addCommentToThread({
+        threadId: postData.postId,
+        commentText: draftThread,
+        userId: userData.userId,
         path: pathname,
         fileUrls: fileUrls,
       });
     } else {
-      await createThread({
-        thread_text: draftThread,
-        author: userData.userId,
+      await addCommentToThread({
+        threadId: postData.postId,
+        commentText: draftThread,
+        userId: userData.userId,
         path: pathname,
       });
     }
@@ -143,7 +137,7 @@ const NewThreadForm = ({ userData, setOpen }: Props) => {
       className="dialog-content sm:max-w-[620px] outline-none border-0 bg-transparent"
     >
       <div className="bg-transparent text-light-1 flex justify-center items-center w-full relative">
-        <p className="text-body-semibold">New thread</p>
+        <p className="text-body-semibold">Reply</p>
         <Link
           href=""
           className="hover:bg-dark-4 p-2 rounded-full absolute right-0"
@@ -157,10 +151,15 @@ const NewThreadForm = ({ userData, setOpen }: Props) => {
           />
         </Link>
       </div>
+
       <form
         onSubmit={handleSubmit}
         className="bg-dark-2 p-6 rounded-xl w-full flex flex-col gap-4"
       >
+        {/* Existing Content */}
+        <CommentPostData postData={postData} />
+
+        {/* Add Comment Form */}
         <div className="flex flex-col">
           <div className="flex flex-row gap-4">
             {/* Main profilepic */}
@@ -310,4 +309,4 @@ const NewThreadForm = ({ userData, setOpen }: Props) => {
   );
 };
 
-export default NewThreadForm;
+export default AddCommentForm;

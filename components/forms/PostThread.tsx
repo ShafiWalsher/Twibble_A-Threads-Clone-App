@@ -1,22 +1,10 @@
 "use client";
-
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { createThread } from "@/lib/actions/thread.actions";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-import { useUploadThing } from "@/lib/uploadthing";
-import AttachmentUploader from "../shared/AttachmentUploader";
 import NewThreadForm from "./NewThreadForm";
+import { useState } from "react";
 
 interface Props {
   userInfo: {
@@ -27,6 +15,8 @@ interface Props {
 }
 
 const PostThread = ({ userInfo }: Props) => {
+  const [open, setOpen] = useState(false);
+
   const userData = {
     userId: userInfo._id,
     username: userInfo.username,
@@ -34,7 +24,7 @@ const PostThread = ({ userInfo }: Props) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <div className="w-full flex items-center justify-center px-3 py-2 gap-2 mb-2">
           <div className="relative h-9 w-9 rounded-full">
@@ -57,7 +47,7 @@ const PostThread = ({ userInfo }: Props) => {
           </div>
         </div>
       </DialogTrigger>
-      <NewThreadForm userData={userData} />
+      <NewThreadForm userData={userData} setOpen={setOpen} />
     </Dialog>
   );
 };

@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import qs from "query-string";
 import { RemoveUrlQueryParams, UrlQueryParams } from "@/types";
+import { currentUser } from "@clerk/nextjs";
+import { getUserByClerkId } from "./actions/user.actions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -87,4 +89,20 @@ export function formatPostCreationTime(createdAt: Date) {
     const years = Math.floor(timeDifferenceInSeconds / 31556952);
     return `${years}Y`;
   }
+}
+
+export async function fetchUserInfoData() {
+  const user = await currentUser();
+  const clerkId = user?.id;
+  const userInfo = await getUserByClerkId(clerkId);
+
+  const userData = {
+    userId: userInfo?._id,
+    username: userInfo?.username || "",
+    firstName: userInfo?.firstName || "",
+    bio: userInfo?.bio || "",
+    photoUrl: userInfo?.photoUrl,
+  };
+
+  return { userInfo, userData };
 }

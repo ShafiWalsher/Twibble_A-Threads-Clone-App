@@ -32,6 +32,16 @@ export const profileTabs = [
   { value: "reposts", label: "Reposts", icon: "/assets/icons/repost.svg" },
 ];
 
+export const activityTabs = [
+  { value: "all", label: "All" },
+  { value: "follows", label: "Follows" },
+  { value: "replies", label: "Replies" },
+  { value: "mentions", label: "Mentions" },
+  { value: "quotes", label: "Quotes" },
+  { value: "reposts", label: "Reposts" },
+  { value: "varified", label: "Varified" },
+];
+
 export const menuItems = [
   { value: "Switch appearance", href: "" },
   { value: "Settings", href: "" },

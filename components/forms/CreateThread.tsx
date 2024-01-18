@@ -1,10 +1,10 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import NewThreadForm from "./NewThreadForm";
+import { useState } from "react";
 
 interface Props {
   link: {
@@ -21,10 +21,11 @@ interface Props {
   from: "Topbar" | "Bottombar";
 }
 
-// const CreateThread = ({ link, isActive, userData, from }: Props) => {
 const CreateThread = ({ link, isActive, userData, from }: Props) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Link
           href=""
@@ -41,7 +42,7 @@ const CreateThread = ({ link, isActive, userData, from }: Props) => {
           />
         </Link>
       </DialogTrigger>
-      <NewThreadForm userData={userData} />
+      <NewThreadForm userData={userData} setOpen={setOpen} />
     </Dialog>
   );
 };

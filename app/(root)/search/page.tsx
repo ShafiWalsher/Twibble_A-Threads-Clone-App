@@ -10,9 +10,6 @@ import {
   getUserByClerkId,
 } from "@/lib/actions/user.actions";
 import { IUser } from "@/lib/database/models/user.model";
-import HashLoader from "react-spinners/HashLoader";
-
-// import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 
 async function Page({
   searchParams,
@@ -41,7 +38,6 @@ async function Page({
       pageSize: 25,
     });
   }
-  // console.log({ searchedResult });
 
   return (
     <section className="w-full mt-5 flex flex-col">
@@ -66,6 +62,7 @@ async function Page({
       </div>
 
       {/* Loader */}
+      {/* Enable if any search results */}
       {/* <div className="w-full flex justify-center py-2">
         <span className="ring-loader" />
       </div> */}
