@@ -9,11 +9,9 @@ import Link from "next/link";
 import React from "react";
 
 const Page = async () => {
-  const { userInfo, userData } = await fetchUserInfoData();
+  const { userInfo } = await fetchUserInfoData();
 
   const activity = await getActivity(userInfo._id);
-
-  // console.log({ activity });
 
   return (
     <section className="w-[710px] h-screen">

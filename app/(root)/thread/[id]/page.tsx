@@ -20,8 +20,6 @@ async function page({ params }: { params: { id: string } }) {
 
   const thread = await fetchThreadById(params.id);
 
-  console.log(thread.comments);
-
   return (
     <section className="w-full pb-10">
       <div className="flex flex-col">
