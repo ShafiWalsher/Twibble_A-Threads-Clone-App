@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import LazyLoading from "../shared/LazyLoading";
 import AddComment from "../shared/AddComment";
 import { useRouter } from "next/navigation";
+import ThreadPopOverMenu from "../shared/ThreadPopOverMenu";
 
 // import DeleteThread from "../forms/DeleteThread";
 
@@ -47,7 +48,7 @@ function ThreadCard({
               {/* User Profile */}
               <div className="flex items-center justify-center">
                 <Link
-                  href={`/profile/${author.id}`}
+                  href={`/profile/${author._id}`}
                   className="relative h-9 w-9"
                 >
                   <Image
@@ -70,7 +71,7 @@ function ThreadCard({
               <div className="w-full flex justify-between items-center">
                 {/* Username */}
                 <div className="flex items-center">
-                  <Link href={`/profile/${author.id}`} className="w-fit">
+                  <Link href={`/profile/${author._id}`} className="w-fit">
                     <h4 className="cursor-pointer text-base-semibold text-light-1 hover:underline">
                       {author.username}
                     </h4>
@@ -81,14 +82,12 @@ function ThreadCard({
                   <p className="text-gray-1 text-base-medium">
                     {formatPostCreationTime(createdAt)}
                   </p>
-                  <div className="relative h-5 w-5 px-2 py-1 rounded-full hover:bg-dark-4">
-                    <Image
-                      src="/assets/icons/menu-dots-gray.svg"
-                      alt="menu"
-                      fill
-                      className="object-contain cursor-pointer"
-                    />
-                  </div>
+                  <ThreadPopOverMenu
+                    currentUserId={currentUserId}
+                    threadAuthorId={author._id}
+                    postId={postId}
+                    parentId={parentId}
+                  />
                 </div>
               </div>
             </div>
@@ -192,7 +191,7 @@ function ThreadCard({
               <div className="flex flex-col items-center">
                 {/* User Profile */}
                 <Link
-                  href={`/profile/${author.id}`}
+                  href={`/profile/${author._id}`}
                   className="relative h-9 w-9"
                 >
                   <Image
@@ -223,7 +222,7 @@ function ThreadCard({
                   <div className="flex justify-between items-center">
                     {/* Username */}
                     <div className="flex items-center">
-                      <Link href={`/profile/${author.id}`} className="w-fit">
+                      <Link href={`/profile/${author._id}`} className="w-fit">
                         <h4 className="cursor-pointer text-base-semibold text-light-1 hover:underline">
                           {author.username}
                         </h4>
@@ -234,14 +233,12 @@ function ThreadCard({
                       <p className="text-gray-1 text-base-medium">
                         {formatPostCreationTime(createdAt)}
                       </p>
-                      <div className="relative h-5 w-5 px-2 py-1 rounded-full hover:bg-dark-4">
-                        <Image
-                          src="/assets/icons/menu-dots-gray.svg"
-                          alt="menu"
-                          fill
-                          className="object-contain cursor-pointer"
-                        />
-                      </div>
+                      <ThreadPopOverMenu
+                        currentUserId={currentUserId}
+                        threadAuthorId={author._id}
+                        postId={postId}
+                        parentId={parentId}
+                      />
                     </div>
                   </div>
 

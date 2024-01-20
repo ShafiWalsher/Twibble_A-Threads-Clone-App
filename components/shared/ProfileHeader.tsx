@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { profilePictures } from "@/constants";
 
 interface Props {
   currUserClerkId: string;
@@ -82,7 +81,7 @@ function ProfileHeader({ currUserClerkId, userInfo }: Props) {
         {/* Follow - Mention or Edit Profile */}
         {currUserClerkId === userInfo.clerkId ? (
           <Link
-            href="/profile/edit"
+            href={`/profile/${userInfo._id}/edit`}
             className="w-full rounded-lg border border-gray-1 p-1 flex items-center justify-center"
           >
             <p className="text-light-1 text-body-semibold">Edit Profile</p>

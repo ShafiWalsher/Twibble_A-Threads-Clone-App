@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import qs from "query-string";
 import { RemoveUrlQueryParams, UrlQueryParams } from "@/types";
 import { currentUser } from "@clerk/nextjs";
-import { getUserByClerkId } from "./actions/user.actions";
+import { getUserByClerkId, getUserById } from "./actions/user.actions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -91,10 +91,21 @@ export function formatPostCreationTime(createdAt: Date) {
   }
 }
 
-export async function fetchUserInfoData() {
+interface fetchUserProps {
+  userId?: string;
+}
+
+export async function fetchUserInfoData({ userId }: fetchUserProps = {}) {
   const user = await currentUser();
   const clerkId = user?.id;
-  const userInfo = await getUserByClerkId(clerkId);
+
+  let userInfo;
+
+  if (userId) {
+    userInfo = await getUserById(userId);
+  } else {
+    userInfo = await getUserByClerkId(clerkId);
+  }
 
   const userData = {
     userId: userInfo?._id,
@@ -104,5 +115,5 @@ export async function fetchUserInfoData() {
     photoUrl: userInfo?.photoUrl,
   };
 
-  return { userInfo, userData };
+  return { userInfo, userData, clerkId };
 }

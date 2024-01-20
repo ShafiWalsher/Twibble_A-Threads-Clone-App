@@ -42,7 +42,7 @@ const FileUploader = ({
         <input {...getInputProps()} />
         {/* <input {...getInputProps()} /> */}
 
-        <div className="group w-full h-full flex items-center justify-center bg-dark-4/70 rounded-full cursor-pointer relative">
+        <div className="group w-full flex items-center justify-center bg-dark-4/70 rounded-full cursor-pointer relative">
           <div className="w-full h-full bg-dark-1/30 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 absolute transition-opacity duration-75" />
           <div className="w-full h-full flex items-center justify-center rounded-full">
             <Image

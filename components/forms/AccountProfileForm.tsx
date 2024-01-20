@@ -10,7 +10,7 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +20,6 @@ import { profileDefaultValues } from "@/constants";
 import FileUploader from "../shared/FileUploader";
 import { useUploadThing } from "@/lib/uploadthing";
 import { updateUser } from "@/lib/actions/user.actions";
-import { handleError } from "@/lib/utils";
 
 interface Props {
   user: {
@@ -50,12 +49,11 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
   const _id = user.userId;
 
   const [files, setFiles] = useState<File[]>([]);
-  const initialValues =
-    user && type === "OnboardingUpdate"
-      ? {
-          ...user,
-        }
-      : profileDefaultValues;
+  const initialValues = user
+    ? {
+        ...user,
+      }
+    : profileDefaultValues;
 
   const form = useForm<z.infer<typeof UserValidation>>({
     resolver: zodResolver(UserValidation),
@@ -82,27 +80,40 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
         return;
       }
 
-      try {
-        const updatedUser = await updateUser({
-          _id,
-          user: {
-            ...values,
-            username,
-            photoUrl: uploadedImageUrl,
-            onboarded: true,
-          },
-        });
+      const updatedUser = await updateUser({
+        _id,
+        user: {
+          ...values,
+          photoUrl: uploadedImageUrl,
+          onboarded: true,
+        },
+      });
 
-        if (updatedUser) {
-          router.push(`/profile/${updatedUser._id}`);
-        }
-      } catch (error) {
-        handleError(error);
+      if (updatedUser) {
+        router.push(`/profile/${updatedUser._id}`);
+      }
+    } else {
+      if (!_id) {
+        router.back();
+        return;
+      }
+
+      const updatedUser = await updateUser({
+        _id,
+        user: {
+          ...values,
+          photoUrl: uploadedImageUrl,
+        },
+        pathname: `/profile/${_id}`,
+      });
+
+      if (updatedUser) {
+        router.push(`/profile/${updatedUser._id}`);
       }
     }
     setSubmitting(false);
 
-    if (pathname === "/profile/edit") {
+    if (pathname === `/profile/${_id}/edit`) {
       router.back();
     } else {
       router.push("/");
@@ -113,10 +124,16 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
     <div className="w-full h-full">
       <Form {...form}>
         <form
-          className="flex flex-col sm:flex-row justify-start gap-10"
+          className={`${
+            type === "ProfileUpdate" ? "flex-col" : "sm:flex-row"
+          }flex flex-col  justify-start gap-10`}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="flex flex-col justify-between sm:w-1/2">
+          <div
+            className={`${
+              type === "ProfileUpdate" ? "w-full" : "sm:w-1/2"
+            } flex flex-col justify-between w-full`}
+          >
             <FormField
               control={form.control}
               name="photoUrl"
@@ -141,7 +158,11 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
               )}
             />
 
-            <div className="w-full mt-10 sm:-0">
+            <div
+              className={`flex flex-col w-full mt-10 sm:mt-6 ${
+                type === "ProfileUpdate" ? "gap-4" : "gap-0"
+              }`}
+            >
               <FormField
                 control={form.control}
                 name="firstName"
@@ -179,7 +200,11 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:w-1/2">
+          <div
+            className={`${
+              type === "ProfileUpdate" ? "w-full mt-10" : "sm:w-1/2"
+            } flex flex-col gap-3 justify-between w-full`}
+          >
             <FormField
               control={form.control}
               name="bio"
@@ -190,7 +215,7 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      rows={10}
+                      rows={Number(`${type === "ProfileUpdate" ? 5 : 10}`)}
                       placeholder="Something about you..."
                       className="account-form_input no-focus resize-none"
                       {...field}
@@ -201,12 +226,34 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
               )}
             />
 
-            <Button
-              type="submit"
-              className="bg-white mt-3 hover:bg-white/80 text-dark-1"
+            <div
+              className={
+                type === "ProfileUpdate"
+                  ? "w-full flex flex-col gap-3"
+                  : "w-full"
+              }
             >
-              {submitting ? "Saving..." : btnTitle}
-            </Button>
+              <Button
+                type="submit"
+                disabled={submitting}
+                className={`${
+                  submitting
+                    ? "cursor-not-allowed bg-light-1/30"
+                    : "hover:bg-light-1/80  cursor-pointer"
+                }text-dark-1 text-base-semibold mt-3 bg-light-1`}
+              >
+                {submitting ? "Saving..." : btnTitle}
+              </Button>
+
+              {type === "ProfileUpdate" && (
+                <Button
+                  onClick={() => router.push(`/profile/${_id}`)}
+                  className="bg-dark-4 hover:bg-gray-1/10"
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
           </div>
         </form>
       </Form>

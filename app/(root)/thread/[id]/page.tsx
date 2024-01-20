@@ -1,12 +1,8 @@
 import { redirect } from "next/navigation";
-import { currentUser } from "@clerk/nextjs";
 
-// import Comment from "@/components/forms/Comment";
 import ThreadCard from "@/components/cards/ThreadCard";
-
-import { getUserByClerkId } from "@/lib/actions/user.actions";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
-import { IPost, UserInfoParams } from "@/types";
+import { IPost } from "@/types";
 import { fetchUserInfoData } from "@/lib/utils";
 
 export const revalidate = 0;

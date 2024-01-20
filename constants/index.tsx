@@ -69,3 +69,16 @@ export const threadInteractIcons = [
   { src: "/assets/icons/repost.svg", label: "repost" },
   { src: "/assets/icons/share.svg", label: "share" },
 ];
+
+export const threadCardMenuItems = [
+  { key: "mute", value: "Mute" },
+  { key: "block", value: "Block" },
+  { key: "hide", value: "Hide" },
+  { key: "report", value: "Report" },
+];
+export const threadCardMenuItems_User = [
+  { key: "pin_to_profile", value: "Pin to profile" },
+  { key: "who_can_reply", value: "Who can reply" },
+  { key: "hide_likes_and_share_counts", value: "Hide likes and share counts" },
+  { key: "delete", value: "Delete" },
+];

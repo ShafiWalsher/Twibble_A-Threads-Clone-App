@@ -17,11 +17,12 @@ export type UpdateUserParams = {
   _id: string;
   user: {
     firstName: string;
-    username: string;
+    username?: string;
     photoUrl: string;
     bio?: string | "";
-    onboarded: boolean;
+    onboarded?: boolean;
   };
+  pathname?: string;
 };
 
 // ====== USERINFO PARAMS
@@ -141,5 +142,41 @@ export interface AddCommentFormParams {
     photoUrl: string;
   };
   parentId: string | null;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface EditThreadParams {
+  currentUserId: string;
+  threadAuthorId: string;
+  postId: string;
+  parentId: string | null;
+  content: string;
+  attachments?: string[];
+  author: IUser;
+  createdAt: Date;
+  userData: {
+    userId: string;
+    username: string;
+    photoUrl: string;
+  };
+  isComment?: boolean;
+}
+
+export interface EditThreadFormParams {
+  postData: {
+    postId: string;
+    content: string;
+    attachments?: string[];
+    author: IUser;
+    createdAt: Date;
+    currentUserId: string;
+  };
+  userData: {
+    userId: string;
+    username: string;
+    photoUrl: string;
+  };
+  parentId: string | null;
+  open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
