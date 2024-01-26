@@ -37,7 +37,6 @@ interface Props {
 const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [name, setName] = useState(user.firstName);
   const username = user.username;
 

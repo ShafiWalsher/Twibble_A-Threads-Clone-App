@@ -5,7 +5,6 @@ import { handleError } from "../utils";
 import User, { IUser } from "../database/models/user.model";
 import { connectToDatabase } from "../database";
 import Thread from "../database/models/thread.model";
-import { revalidatePath } from "next/cache";
 import { FilterQuery, Schema, SortOrder, Types } from "mongoose";
 import {
   deleteClerkUser,
@@ -82,84 +81,6 @@ export async function updateUser({ _id, user }: UpdateUserParams) {
     handleError(error);
   }
 }
-
-// Delete User
-// export async function deleteUser(userId: string) {
-//   try {
-//     await connectToDatabase();
-
-//     // Find user to delete
-//     const userToDelete = await User.findOne({ _id: userId });
-
-//     console.log("from USER ACtions:", { userToDelete });
-
-//     if (!userToDelete) {
-//       throw new Error("User not found");
-//     }
-
-//     // Unlink relationships
-//     await Promise.all([
-//       // Update the 'threads' collection to remove references to the user
-//       Thread.updateMany(
-//         { _id: { $in: userToDelete.threads } },
-//         { $pull: { author: userToDelete._id } }
-//       ),
-//     ]);
-
-//     // Delete user from mongoDB
-//     const deletedUser = await User.findByIdAndDelete(userToDelete._id);
-//     revalidatePath("/");
-
-//     // Delete user from Clerk
-//     await deleteClerkUser(JSON.parse(JSON.stringify(userToDelete.clerkId)));
-
-//     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
-//   } catch (error) {
-//     handleError(error);
-//   }
-// }
-
-// Delete User ChatGPT
-// export async function deleteUser(userId: string) {
-//   try {
-//     await connectToDatabase();
-
-//     // Find user to delete
-//     const userToDelete = await User.findOne({ _id: userId });
-
-//     console.log("from USER ACtions:", { userToDelete });
-
-//     if (!userToDelete) {
-//       throw new Error("User not found");
-//     }
-
-//     // Delete user's threads
-//     await Thread.deleteMany({ _id: { $in: userToDelete.threads } });
-
-//     // Unlink relationships in other threads
-//     await Thread.updateMany(
-//       { "comments.author": userId },
-//       { $pull: { comments: { author: userId } } }
-//     );
-
-//     // Remove user references from threads
-//     await Thread.updateMany(
-//       { _id: { $in: userToDelete.threads } },
-//       { $pull: { author: userId } }
-//     );
-
-//     // Delete user from MongoDB
-//     const deletedUser = await User.findByIdAndDelete(userToDelete._id);
-//     revalidatePath("/");
-
-//     // Delete user from Clerk
-//     await deleteClerkUser(JSON.parse(JSON.stringify(userToDelete.clerkId)));
-
-//     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
-//   } catch (error) {
-//     handleError(error);
-//   }
-// }
 
 // Fetch All the users (This should be like top searched users)
 export async function fetchAllUsers({
@@ -366,11 +287,3 @@ async function deleteComments(commentIds: Schema.Types.ObjectId[]) {
     }
   }
 }
-
-//  // Delete User from MongoDb
-//     const deletedUser = await User.findByIdAndDelete(userId);
-//     // Delete User from Clerk
-//     if (deletedUser) {
-//       await deleteClerkUser(JSON.parse(JSON.stringify(userToDelete.clerkId)));
-//     }
-//     return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;

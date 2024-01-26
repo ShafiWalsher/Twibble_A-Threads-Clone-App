@@ -1,34 +1,3 @@
-// import Image from "next/image";
-// import Link from "next/link";
-// import React from "react";
-// import HamMenu from "./HamMenu";
-// import NavMenu from "./NavMenu";
-// import { fetchUserInfoData } from "@/lib/actions/clerk.actions";
-
-// const Topbar = async () => {
-//   const { userData } = await fetchUserInfoData();
-
-//   return (
-//     <section className="flex justify-center items-center">
-//       <nav className="topbar">
-//         <Link href="/">
-//           <Image
-//             src="/assets/logo/logo-icon-white.svg"
-//             alt="logo"
-//             width={30}
-//             height={30}
-//             className="object-contain"
-//           />
-//         </Link>
-//         <NavMenu userData={userData} from="Topbar" />
-//         <HamMenu />
-//       </nav>
-//     </section>
-//   );
-// };
-
-// export default Topbar;
-
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

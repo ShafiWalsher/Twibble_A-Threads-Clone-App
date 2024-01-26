@@ -1,9 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-
-import { Button } from "../ui/button";
 import Link from "next/link";
 
 interface Props {
@@ -15,8 +12,6 @@ interface Props {
 }
 
 function UserCard({ userId, name, username, imgUrl, from }: Props) {
-  const router = useRouter();
-
   let followers = "582K";
 
   return (

@@ -1,14 +1,10 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import AttachmentUploader from "../shared/AttachmentUploader";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { DialogClose, DialogContent } from "../ui/dialog";
-import { useUploadThing } from "@/lib/uploadthing";
 import { usePathname } from "next/navigation";
 import { EditThreadFormParams } from "@/types";
-import { addCommentToThread } from "@/lib/actions/thread.actions";
-import DeleteThread from "../shared/DeleteThread";
 
 const EditThreadForm = ({
   userData,

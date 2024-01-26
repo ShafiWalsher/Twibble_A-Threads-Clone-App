@@ -24,8 +24,6 @@ const Page = async ({ params }: { params: { id: string } }) => {
     photoUrl: userInfo?.photoUrl,
   };
 
-  // console.log({ userInfo });
-
   const result = await fetchUserPosts({ userId: params.id });
 
   return (

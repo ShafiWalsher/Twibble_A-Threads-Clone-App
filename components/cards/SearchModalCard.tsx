@@ -1,8 +1,6 @@
 import Image from "next/image";
-import React, { Suspense } from "react";
 import UserCard from "./UserCard";
 import { IUser } from "@/lib/database/models/user.model";
-import Loading from "../shared/Load";
 
 interface Props {
   value: string;

@@ -1,9 +1,6 @@
-import React, { Suspense } from "react";
-import CarouselCard from "../cards/CarouselCard";
 import Link from "next/link";
 import Image from "next/image";
 import { IUser } from "@/lib/database/models/user.model";
-import LazyLoading from "./LazyLoading";
 import {
   Carousel,
   CarouselContent,

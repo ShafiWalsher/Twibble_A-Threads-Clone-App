@@ -1,4 +1,3 @@
-import AccountProfile from "@/components/forms/AccountProfile";
 import AccountProfileForm from "@/components/forms/AccountProfileForm";
 import RippleLoading from "@/components/shared/Loading";
 import { fetchUserInfoData } from "@/lib/actions/clerk.actions";
@@ -9,8 +8,6 @@ const page = async ({ params }: { params: { id: string } }) => {
   const { clerkId: currUserClerkId, userInfo } = await fetchUserInfoData({
     userId: params.id,
   });
-
-  // console.log({ userInfo });
 
   if (!currUserClerkId) redirect("/"); // Type check for typescript
 

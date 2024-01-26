@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-
 import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
 import { IPost } from "@/types";

@@ -7,14 +7,6 @@ import NewThreadForm from "./NewThreadForm";
 import { useState } from "react";
 import { IUser } from "@/lib/database/models/user.model";
 
-interface Props {
-  userInfo: {
-    _id: string;
-    username: string;
-    photoUrl?: string;
-  };
-}
-
 const PostThread = ({ userInfo }: { userInfo: IUser }) => {
   const [open, setOpen] = useState(false);
 

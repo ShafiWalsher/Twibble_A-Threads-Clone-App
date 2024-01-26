@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import AttachmentUploader from "../shared/AttachmentUploader";
 import Link from "next/link";
-import { DialogClose, DialogContent } from "../ui/dialog";
+import { DialogContent } from "../ui/dialog";
 import { useUploadThing } from "@/lib/uploadthing";
 import { usePathname } from "next/navigation";
 import { createThread } from "@/lib/actions/thread.actions";
