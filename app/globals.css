@@ -85,7 +85,7 @@ html {
   }
 
   .ham-menu_link-text {
-    @apply text-light-1 px-3 py-2 text-base-semibold border-b border-b-gray-1/50 !important;
+    @apply text-light-1 px-3 py-3 text-base-semibold border-b border-b-gray-1/50 !important;
   }
 
   .special-btn {
@@ -190,6 +190,14 @@ html {
   @apply border-0 outline-none ring-0 focus:ring-0 bg-transparent no-focus text-light-1 mt-0 p-0 placeholder:text-gray-1 placeholder:text-base-regular text-base-regular !important;
 }
 
+.account-form_btn {
+  @apply text-dark-1 mt-3 bg-light-1 flex-1 hover:bg-light-1/80  cursor-pointer py-2 !important;
+}
+
+.account-forn_btn_submitting {
+  @apply cursor-not-allowed text-light-1 py-2  bg-light-1/30 w-full flex flex-1 mt-3 !important;
+}
+
 /* Small Text */
 .text-small {
   @apply text-[4px] !important;
@@ -218,11 +226,16 @@ html {
   @apply sm:max-w-[280px] sm:max-h-[185px] outline-none border border-gray-1/30 rounded-2xl bg-dark-2 p-0 !important;
 }
 
+.delete-dialog-content_account {
+  @apply sm:max-w-[380px] sm:max-h-[185px] outline-none border border-gray-1/30 rounded-2xl bg-dark-2 p-0 !important;
+}
+
 .delete-dialog-content_btn {
   @apply flex justify-center items-center flex-1 w-full h-10 py-2 bg-transparent rounded-none !important;
 }
 /* remove Cross from card */
-.delete-dialog-content button svg {
+.delete-dialog-content button svg,
+.delete-dialog-content_account button svg {
   @apply hidden;
 }
 

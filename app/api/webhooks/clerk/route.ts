@@ -1,10 +1,11 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
+import { createUser } from "@/lib/actions/user.actions";
 import { clerkClient } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import { IUser } from "@/lib/database/models/user.model";
+import { handleError } from "@/lib/utils";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -81,21 +82,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "OK", user: newUser });
   }
 
-  // Update users
-  // if (eventType === "user.updated") {
-  //   const { id, image_url, first_name, username } = evt.data;
-
-  //   const user = {
-  //     firstName: first_name,
-  //     username: username!,
-  //     photoUrl: image_url,
-  //   };
-
-  //   const updatedUser = await updateUser(id, user);
-
-  //   return NextResponse.json({ message: "OK", user: updatedUser });
-  // }
-
   // // Delete user
   // if (eventType === "user.deleted") {
   //   const { id } = evt.data;
@@ -107,3 +93,41 @@ export async function POST(req: Request) {
 
   return new Response("", { status: 200 });
 }
+
+// Update users (Get Updated user from user.actions and update clerkUser)
+export const updateClerkUser = async (mongoDbUser: IUser) => {
+  try {
+    if (!mongoDbUser) {
+      throw new Error("Clerk User update failed");
+    }
+
+    // for now update only firstName
+    // Get clerkId from mongodb document
+    // Documentation: https://clerk.com/docs/references/backend/user/update-user
+    const userId = mongoDbUser.clerkId;
+    // Define parameters
+    const params = {
+      firstName: mongoDbUser.firstName,
+    };
+
+    const updatedClerkUser = await clerkClient.users.updateUser(userId, params);
+
+    return NextResponse.json({ message: "OK", user: updatedClerkUser });
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+// Delete user if user is Deleted from MongoDb
+export const deleteClerkUser = async (userId: string) => {
+  try {
+    if (!userId) {
+      throw new Error("Clerk User Delete failed");
+    }
+    const user = await clerkClient.users.deleteUser(userId);
+
+    return NextResponse.json({ message: "OK", user: user });
+  } catch (error) {
+    handleError(error);
+  }
+};

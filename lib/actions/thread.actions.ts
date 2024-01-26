@@ -32,6 +32,7 @@ export async function createThread({
   try {
     connectToDatabase();
 
+    // Comment Thread
     const createdThread = await Thread.create({
       thread_text,
       author,
@@ -117,7 +118,10 @@ export async function fetchUserPosts({
     const skipAmount = (page - 1) * limit;
 
     // Find all threads authored by the user with the given userId, sorted by createdAt in descending order.
-    const threadsQuery = Thread.find({ author: userId })
+    // const threadsQuery = Thread.find({ author: userId })
+    const threadsQuery = Thread.find({
+      $and: [{ parentId: { $in: [null, undefined] } }, { author: userId }],
+    })
       .sort({ createdAt: "desc" })
       .skip(skipAmount)
       .limit(limit)
@@ -215,6 +219,11 @@ export async function addCommentToThread({
       author: userId,
       attachments: fileUrls,
       parentId: threadId, // Set the parentId to the original thread's ID
+    });
+
+    // Update User model
+    await User.findByIdAndUpdate(userId, {
+      $push: { comments: commentThread._id },
     });
 
     // Save the comment thread to the database

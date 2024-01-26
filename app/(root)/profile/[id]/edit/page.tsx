@@ -1,7 +1,7 @@
 import AccountProfile from "@/components/forms/AccountProfile";
 import AccountProfileForm from "@/components/forms/AccountProfileForm";
 import RippleLoading from "@/components/shared/Loading";
-import { fetchUserInfoData } from "@/lib/utils";
+import { fetchUserInfoData } from "@/lib/actions/clerk.actions";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 
@@ -23,14 +23,16 @@ const page = async ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <section className="h-full w-full flex flex-1 flex-col mt-6">
-      <Suspense fallback={<RippleLoading />}>
-        <AccountProfileForm
-          user={userData}
-          btnTitle="Save"
-          type="ProfileUpdate"
-        />
-      </Suspense>
+    <section className="h-full w-full flex flex-1 items-center justify-center">
+      <div className="flex flex-1">
+        <Suspense fallback={<RippleLoading />}>
+          <AccountProfileForm
+            user={userData}
+            btnTitle="Save"
+            type="ProfileUpdate"
+          />
+        </Suspense>
+      </div>
     </section>
   );
 };

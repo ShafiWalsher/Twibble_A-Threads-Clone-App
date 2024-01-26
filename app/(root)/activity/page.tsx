@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { activityTabs } from "@/constants";
 import { getActivity } from "@/lib/actions/user.actions";
-import { fetchUserInfoData } from "@/lib/utils";
+import { fetchUserInfoData } from "@/lib/actions/clerk.actions";
 import { IPost } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,7 +27,7 @@ const Page = async () => {
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="w-full px-20">
+        <div className="w-full px-20 h-full">
           <TabsContent value="all">
             {activity.length > 0 ? (
               <div className="flex flex-col gap-2">
@@ -57,7 +57,11 @@ const Page = async () => {
                 ))}
               </div>
             ) : (
-              <p className="!text-base-regular text-light-3">No activity yet</p>
+              <div className="flex flex-1 justify-center items-center">
+                <p className="text-base-regular text-gray-1 flex flex-1 justify-center h-full">
+                  No activity yet
+                </p>
+              </div>
             )}
           </TabsContent>
 
@@ -65,9 +69,11 @@ const Page = async () => {
             <div key={item.value}>
               {item.label !== "All" && (
                 <TabsContent value={item.value}>
-                  <p className="text-light-1">
-                    Nothing in {item.value} tab yet!
-                  </p>
+                  <div className="flex flex-1 justify-center items-center">
+                    <p className="text-base-regular text-gray-1 flex flex-1 justify-center h-full">
+                      Nothing in {item.value} tab yet!
+                    </p>
+                  </div>
                 </TabsContent>
               )}
             </div>

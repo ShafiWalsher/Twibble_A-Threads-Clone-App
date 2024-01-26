@@ -1,6 +1,5 @@
 "use client";
-import { profilePictures, threadInteractIcons } from "@/constants";
-import { formatPostCreationTime } from "@/lib/utils";
+import { threadInteractIcons } from "@/constants";
 import { ThreadCardProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,8 +9,7 @@ import LazyLoading from "../shared/LazyLoading";
 import AddComment from "../shared/AddComment";
 import { useRouter } from "next/navigation";
 import ThreadPopOverMenu from "../shared/ThreadPopOverMenu";
-
-// import DeleteThread from "../forms/DeleteThread";
+import { countReplies } from "@/lib/utils";
 
 function ThreadCard({
   postId,
@@ -25,19 +23,54 @@ function ThreadCard({
   isComment,
   from,
   userData,
+  index,
 }: ThreadCardProps) {
-  const totalReplies: number = 221;
   const totalLikes: number = 3251;
+
+  const totalReplies: number = countReplies(comments);
 
   const router = useRouter();
   const handleDivClick = () => {
     router.push(`/thread/${postId}`);
   };
 
+  function formatPostCreationTime(createdAt: Date) {
+    const now = new Date();
+    const postDate = new Date(createdAt);
+
+    const timeDifferenceInSeconds = Math.floor(
+      (now.getTime() - postDate.getTime()) / 1000
+    );
+
+    if (timeDifferenceInSeconds < 60) {
+      return `${timeDifferenceInSeconds}sec`;
+    } else if (timeDifferenceInSeconds < 3600) {
+      const minutes = Math.floor(timeDifferenceInSeconds / 60);
+      return `${minutes}min`;
+    } else if (timeDifferenceInSeconds < 86400) {
+      const hours = Math.floor(timeDifferenceInSeconds / 3600);
+      return `${hours}H`;
+    } else if (timeDifferenceInSeconds < 604800) {
+      const days = Math.floor(timeDifferenceInSeconds / 86400);
+      return `${days}D`;
+    } else if (timeDifferenceInSeconds < 2629746) {
+      const weeks = Math.floor(timeDifferenceInSeconds / 604800);
+      return `${weeks}W`;
+    } else if (timeDifferenceInSeconds < 31556952) {
+      const months = Math.floor(timeDifferenceInSeconds / 2629746);
+      return `${months}M`;
+    } else {
+      const years = Math.floor(timeDifferenceInSeconds / 31556952);
+      return `${years}Y`;
+    }
+  }
+
   return (
     <div
       className={`flex w-full h-full flex-col *:bg-transparent py-3 ${
-        from === "ThreadPage" ? "border-none" : "border-t border-t-gray-1/30"
+        from === "ThreadPage" || index === 0
+          ? "border-none"
+          : "border-t border-t-gray-1/30"
       }`}
     >
       {from === "ThreadPage" ? (
@@ -167,14 +200,15 @@ function ThreadCard({
               <div className="flex items-center gap-2">
                 <Link href={`/thread/${postId}`}>
                   <p className="mt-1 text-small-medium text-gray-1 hover:underline">
-                    {comments?.length} Repl
-                    {(comments?.length ?? 0) > 1 ? "ies" : "y"}
+                    {totalReplies > 1
+                      ? `${totalReplies} replies`
+                      : `${totalReplies} reply`}
                   </p>
                 </Link>
                 <div className="h-1 w-1 bg-gray-1 mt-1 rounded-full" />
                 <Link href="">
                   <p className="mt-1 text-small-medium text-gray-1 hover:underline">
-                    {totalLikes} Lik
+                    {totalLikes} lik
                     {(totalLikes ?? 0) > 1 ? "es" : "e"}
                     {totalLikes > 0}
                   </p>
@@ -209,7 +243,7 @@ function ThreadCard({
                   />
                 </Link>
 
-                <div className="thread-card_bar" />
+                {!isComment && <div className="thread-card_bar" />}
               </div>
 
               <div className="flex flex-col w-full">
@@ -302,65 +336,63 @@ function ThreadCard({
                   </div>
 
                   {isComment && (comments?.length ?? 0) > 0 && (
-                    <Link href={`/thread/${postId}`}>
-                      <p className="mt-1 text-subtle-medium text-gray-1">
-                        {comments?.length} repl
-                        {(comments?.length ?? 0) > 1 ? "ies" : "y"}
-                      </p>
-                    </Link>
+                    <div className="flex gap-2 items-center">
+                      <Link href={`/thread/${postId}`}>
+                        <p className="mt-1 text-small-medium text-gray-1 hover:underline">
+                          {comments?.length} repl
+                          {(comments?.length ?? 0) > 1 ? "ies" : "y"}
+                        </p>
+                      </Link>
+                      {/* <div className="h-1 w-1 bg-gray-1 mt-1 rounded-full" /> */}
+                    </div>
                   )}
                 </div>
               </div>
             </div>
-
-            {/* <DeleteThread
-          threadId={JSON.stringify(postId)}
-          currentUserId={currentUserId}
-          authorId={author.id}
-          parentId={parentId}
-          isComment={isComment}
-        /> */}
           </div>
 
           {/* Replies and Likes */}
           <div className="flex items-center justify-start pt-2 mb-2">
             <div className="flex items-center gap-2">
-              <span className="flex -space-x-3 overflow-hidden">
-                {/* followers Icon */}
-                {!isComment && (comments?.length ?? 0) > 0 && (
-                  <>
-                    {comments?.slice(0, 2).map((comment, index) => (
-                      <div key={index} className="relative w-5 h-5">
-                        <Link href="">
-                          <Image
-                            key={index}
-                            className="border-2 border-dark-1 rounded-full object-contain"
-                            src={comment?.author?.photoUrl || ""}
-                            alt={`user_${index}`}
-                            fill
-                          />
-                        </Link>
-                      </div>
-                    ))}
-                  </>
-                )}
-              </span>
-              <div className="flex items-center gap-2">
-                <Link href={`/thread/${postId}`}>
-                  <p className="mt-1 text-small-medium text-gray-1 hover:underline">
-                    {comments?.length} Repl
-                    {(comments?.length ?? 0) > 1 ? "ies" : "y"}
-                  </p>
-                </Link>
-                <div className="h-1 w-1 bg-gray-1 mt-1 rounded-full" />
-                <Link href="">
-                  <p className="mt-1 text-small-medium text-gray-1 hover:underline">
-                    {totalLikes} Lik
-                    {(totalLikes ?? 0) > 1 ? "es" : "e"}
-                    {totalLikes > 0}
-                  </p>
-                </Link>
-              </div>
+              {/* followers Icon */}
+              {!isComment && (comments?.length ?? 0) > 0 && (
+                <span className="flex items-center mt-0.5 -space-x-3 overflow-hidden">
+                  {comments?.slice(0, 2).map((comment, index) => (
+                    <div key={index} className="relative w-5 h-5">
+                      <Link href="">
+                        <Image
+                          key={index}
+                          className="border-2 border-dark-1 rounded-full object-contain"
+                          src={comment?.author?.photoUrl || ""}
+                          alt={`user_${index}`}
+                          fill
+                        />
+                      </Link>
+                    </div>
+                  ))}
+                </span>
+              )}
+              {!isComment && (
+                <div className="flex items-center gap-2">
+                  <Link href={`/thread/${postId}`}>
+                    <p className="mt-1 text-small-medium text-gray-1 hover:underline">
+                      {totalReplies > 1
+                        ? `${totalReplies} replies`
+                        : `${totalReplies} reply`}
+                      {/* {totalReplies?.length} repl
+                      {(comments?.length ?? 0) > 1 ? "ies" : "y"} */}
+                    </p>
+                  </Link>
+                  <div className="h-1 w-1 bg-gray-1 mt-1 rounded-full" />
+                  <Link href="">
+                    <p className="mt-1 text-small-medium text-gray-1 hover:underline">
+                      {totalLikes} lik
+                      {(totalLikes ?? 0) > 1 ? "es" : "e"}
+                      {totalLikes > 0}
+                    </p>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </>

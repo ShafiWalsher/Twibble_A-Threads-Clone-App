@@ -2,7 +2,6 @@ import { Document, Schema, model, models, Types } from "mongoose";
 import { IUser } from "./user.model";
 
 export interface IThread extends Document {
-  _id: string;
   thread_text?: string;
   attachments?: string[];
   author: Types.ObjectId | IUser;

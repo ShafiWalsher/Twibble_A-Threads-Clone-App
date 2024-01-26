@@ -8,6 +8,7 @@ export interface IUser extends Document {
   photoUrl?: string;
   bio?: string;
   threads?: Schema.Types.ObjectId[];
+  comments?: Schema.Types.ObjectId[];
   onboarded?: boolean;
 }
 
@@ -19,6 +20,12 @@ const userSchema = new Schema<IUser>({
   photoUrl: { type: String },
   bio: { type: String },
   threads: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Thread",
+    },
+  ],
+  comments: [
     {
       type: Schema.Types.ObjectId,
       ref: "Thread",

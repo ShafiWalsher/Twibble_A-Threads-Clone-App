@@ -10,8 +10,8 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -20,6 +20,7 @@ import { profileDefaultValues } from "@/constants";
 import FileUploader from "../shared/FileUploader";
 import { useUploadThing } from "@/lib/uploadthing";
 import { updateUser } from "@/lib/actions/user.actions";
+import DeleteAccount from "../shared/DeleteAccount";
 
 interface Props {
   user: {
@@ -35,8 +36,8 @@ interface Props {
 
 const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
-  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [name, setName] = useState(user.firstName);
   const username = user.username;
 
@@ -60,8 +61,9 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
     defaultValues: initialValues,
   });
 
+  // Handle Form Submit
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
-    setSubmitting(true);
+    setIsSubmitting(true);
     let uploadedImageUrl = values.photoUrl;
 
     if (files.length > 0) {
@@ -90,9 +92,10 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
       });
 
       if (updatedUser) {
-        router.push(`/profile/${updatedUser._id}`);
+        router.push(`/`);
       }
-    } else {
+    }
+    if (type === "ProfileUpdate") {
       if (!_id) {
         router.back();
         return;
@@ -111,22 +114,20 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
         router.push(`/profile/${updatedUser._id}`);
       }
     }
-    setSubmitting(false);
-
-    if (pathname === `/profile/${_id}/edit`) {
-      router.back();
-    } else {
-      router.push("/");
-    }
+    setIsSubmitting(false);
   };
 
   return (
-    <div className="w-full h-full">
+    <section
+      className={`${
+        type === "ProfileUpdate" ? "bg-transparent" : "bg-dark-2"
+      }  p-6 rounded-xl h-full w-full flex items-center justify-center`}
+    >
       <Form {...form}>
         <form
           className={`${
-            type === "ProfileUpdate" ? "flex-col" : "sm:flex-row"
-          }flex flex-col  justify-start gap-10`}
+            type === "ProfileUpdate" ? "flex-col gap-5" : "sm:flex-row gap-10"
+          } flex flex-col w-full justify-start`}
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <div
@@ -160,7 +161,7 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
 
             <div
               className={`flex flex-col w-full mt-10 sm:mt-6 ${
-                type === "ProfileUpdate" ? "gap-4" : "gap-0"
+                type === "ProfileUpdate" ? "gap-5" : "gap-0"
               }`}
             >
               <FormField
@@ -202,7 +203,7 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
 
           <div
             className={`${
-              type === "ProfileUpdate" ? "w-full mt-10" : "sm:w-1/2"
+              type === "ProfileUpdate" ? "w-full mt-0" : "sm:w-1/2 "
             } flex flex-col gap-3 justify-between w-full`}
           >
             <FormField
@@ -230,34 +231,47 @@ const AccountProfileForm = ({ user, btnTitle, type }: Props) => {
               className={
                 type === "ProfileUpdate"
                   ? "w-full flex flex-col gap-3"
-                  : "w-full"
+                  : "w-full flex flex-1"
               }
             >
               <Button
                 type="submit"
-                disabled={submitting}
+                disabled={isSubmitting}
                 className={`${
-                  submitting
-                    ? "cursor-not-allowed bg-light-1/30"
-                    : "hover:bg-light-1/80  cursor-pointer"
-                }text-dark-1 text-base-semibold mt-3 bg-light-1`}
+                  isSubmitting
+                    ? "account-forn_btn_submitting"
+                    : "account-form_btn"
+                }`}
               >
-                {submitting ? "Saving..." : btnTitle}
+                {isSubmitting ? "Saving..." : btnTitle}
               </Button>
 
               {type === "ProfileUpdate" && (
-                <Button
-                  onClick={() => router.push(`/profile/${_id}`)}
-                  className="bg-dark-4 hover:bg-gray-1/10"
-                >
-                  Cancel
-                </Button>
+                <div className="flex flex-col gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => router.push(`/profile/${_id}`)}
+                    className="bg-dark-4 hover:bg-gray-1/10"
+                  >
+                    Cancel
+                  </Button>
+                  {/* <Button
+                    type="button"
+                    onClick={() => handleDelete(user.userId)}
+                    className="bg-dark-4 hover:bg-gray-1/10"
+                  >
+                    <p className="text-red-600">
+                      {isDeleting ? "Deleting..." : "Delete your account"}
+                    </p>
+                  </Button> */}
+                  <DeleteAccount userId={user.userId} />
+                </div>
               )}
             </div>
           </div>
         </form>
       </Form>
-    </div>
+    </section>
   );
 };
 

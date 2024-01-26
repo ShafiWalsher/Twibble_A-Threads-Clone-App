@@ -3,16 +3,12 @@ import { redirect } from "next/navigation";
 import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
 import { IPost } from "@/types";
-import { fetchUserInfoData } from "@/lib/utils";
-
-export const revalidate = 0;
+import { fetchUserInfoData } from "@/lib/actions/clerk.actions";
 
 async function page({ params }: { params: { id: string } }) {
   if (!params.id) return null;
 
   const { userInfo, userData } = await fetchUserInfoData();
-
-  if (!userInfo?.onboarded) redirect("/onboarding");
 
   const thread = await fetchThreadById(params.id);
 

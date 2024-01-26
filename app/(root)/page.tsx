@@ -1,18 +1,42 @@
 import ThreadCard from "@/components/cards/ThreadCard";
 import PostThread from "@/components/forms/PostThread";
 import LoadMore from "@/components/shared/LoadMore";
+import { fetchUserInfoData } from "@/lib/actions/clerk.actions";
 import { fetchPosts } from "@/lib/actions/thread.actions";
-import { fetchUserInfoData } from "@/lib/utils";
+import { getUserByClerkId } from "@/lib/actions/user.actions";
+import { IUser } from "@/lib/database/models/user.model";
 import { IPost } from "@/types";
+import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const { userInfo, userData } = await fetchUserInfoData();
+  const user = await currentUser();
+  const clerkId = user?.id;
+
+  // const userInfo = await getUserByClerkId(clerkId);
+
+  let userInfo: IUser;
+  userInfo = await getUserByClerkId(clerkId);
+  if (!userInfo) {
+    userInfo = await getUserByClerkId(clerkId);
+  }
+
+  // console.log(userInfo?.onboarded);
 
   if (!userInfo?.onboarded) redirect("/onboarding");
 
+  const userData = {
+    userId: userInfo?._id || "",
+    username: userInfo?.username || "",
+    firstName: userInfo?.firstName || "",
+    bio: userInfo?.bio || "",
+    photoUrl: userInfo?.photoUrl || "",
+  };
+
   let page = 1;
   const result = await fetchPosts({ page });
+
+  // result?.posts.map((post: IPost) => console.log(post.comments?.length));
 
   return (
     <>

@@ -49,7 +49,8 @@ export interface ThreadCardProps {
   createdAt: Date;
   comments?: IComment[];
   isComment?: boolean;
-  from?: "ThreadPage" | "HomePage";
+  from?: "ThreadPage" | "HomePage" | "ProfilePage";
+  index?: number;
   userData: {
     userId: string;
     username: string;
@@ -61,8 +62,11 @@ export interface ThreadCardProps {
 export interface IComment {
   _id: string;
   thread_text: string;
+  attachments?: string[];
   author: IUser;
   createdAt: Date;
+  parentId?: string;
+  comments?: IComment[];
 }
 
 export interface IPost {

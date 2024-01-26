@@ -24,6 +24,8 @@ const Page = async ({ params }: { params: { id: string } }) => {
     photoUrl: userInfo?.photoUrl,
   };
 
+  // console.log({ userInfo });
+
   const result = await fetchUserPosts({ userId: params.id });
 
   return (
@@ -50,7 +52,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
         {/* Thread Tab Content */}
         <TabsContent
           value="threads"
-          className="w-full mt-4 flex-1 flex items-center justify-center px-10"
+          className="w-full mt-4 flex-1 flex  justify-center px-10"
         >
           {userInfo.threads.length === 0 ? (
             <div className="w-full h-full flex-1 flex items-center justify-center">
@@ -59,7 +61,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
           ) : (
             <>
               <div className="flex flex-col w-full">
-                {result.threads.map((thread: IPost) => (
+                {result.threads.map((thread: IPost, index: number) => (
                   <ThreadCard
                     key={thread._id}
                     postId={thread._id}
@@ -71,6 +73,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
                     createdAt={thread.createdAt}
                     comments={thread.comments}
                     userData={userData}
+                    index={index}
                   />
                 ))}
               </div>

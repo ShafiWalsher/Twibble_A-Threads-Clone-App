@@ -5,6 +5,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import NewThreadForm from "./NewThreadForm";
 import { useState } from "react";
+import { IUser } from "@/lib/database/models/user.model";
 
 interface Props {
   userInfo: {
@@ -14,7 +15,7 @@ interface Props {
   };
 }
 
-const PostThread = ({ userInfo }: Props) => {
+const PostThread = ({ userInfo }: { userInfo: IUser }) => {
   const [open, setOpen] = useState(false);
 
   const userData = {

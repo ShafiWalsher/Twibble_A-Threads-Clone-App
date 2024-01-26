@@ -23,7 +23,7 @@ async function Page({
 
   // fetch current User
   const userInfo: UserInfoParams = await getUserByClerkId(clerkId);
-  if (!userInfo?.onboarded) redirect("/onboarding");
+  // if (!userInfo?.onboarded) redirect("/onboarding");
 
   const result = await fetchAllUsers({
     currentUserId: userInfo._id,

@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Image from "next/image";
 import { menuItems } from "@/constants";
 import Link from "next/link";
-import { SignOutButton, SignedIn, useClerk } from "@clerk/nextjs";
+import { SignedIn, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 const HamMenu = () => {
@@ -28,7 +28,7 @@ const HamMenu = () => {
         </PopoverTrigger>
         <PopoverContent className="p-0 w-fit mr-7 rounded-xl bg-dark-2 border-0">
           <SignedIn>
-            <div className="flex flex-col gap-2 pt-2 w-full">
+            <div className="flex flex-col py-2 w-full">
               {menuItems.map((item, index) => (
                 <div key={index}>
                   {item.value === "Logout" ? (
