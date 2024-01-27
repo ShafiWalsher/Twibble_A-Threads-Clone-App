@@ -11,43 +11,49 @@ interface Props {
 
 // Define the type for your user data
 interface UserData {
-  userId: any;
-  username: any;
-  firstName: any;
-  bio: any;
-  photoUrl: any;
+  userId: string;
+  username: string;
+  firstName: string;
+  bio: string;
+  photoUrl: string;
 }
 
 const AccountProfile = ({ btnTitle, type }: Props) => {
-  // Set initial state to null and explicitly provide the type
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      const { userData } = await fetchUserInfoData();
+      setUserData(userData);
+      setLoading(false); // Set loading to false on successful data fetch
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      // You can add more specific error handling if needed
+      // For now, just set loading to false in case of an error
+
+      // Retry the fetch after a delay (e.g., 1 second)
+      setTimeout(fetchData, 1000);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { userData } = await fetchUserInfoData();
-        setUserData(userData);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     fetchData();
   }, []); // Empty dependency array means this effect runs once after the component mounts
 
-  if (!userData) {
-    // Render loading state or return null
+  if (loading) {
     return <RippleLoading />;
   }
-
   return (
     <section
       className={`${
         type === "ProfileUpdate" ? "bg-transparent" : "bg-dark-2"
-      }  p-6 rounded-xl h-full w-full flex items-center justify-center`}
+      }  rounded-xl h-full w-full flex items-center justify-center`}
     >
       <Suspense fallback={<RippleLoading />}>
-        <AccountProfileForm user={userData} btnTitle={btnTitle} type={type} />
+        {!loading && userData && (
+          <AccountProfileForm user={userData} btnTitle={btnTitle} type={type} />
+        )}
       </Suspense>
     </section>
   );

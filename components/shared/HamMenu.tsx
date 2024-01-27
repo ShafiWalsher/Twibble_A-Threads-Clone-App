@@ -28,7 +28,7 @@ const HamMenu = () => {
         </PopoverTrigger>
         <PopoverContent className="p-0 w-fit mr-7 rounded-xl bg-dark-2 border-0">
           <SignedIn>
-            <div className="flex flex-col py-2 w-full">
+            <div className="flex flex-col w-full">
               {menuItems.map((item, index) => (
                 <div key={index}>
                   {item.value === "Logout" ? (
@@ -39,6 +39,16 @@ const HamMenu = () => {
                       className="ham-menu_link"
                     >
                       <p className="ham-menu_link-text border-none">Logout</p>
+                    </Link>
+                  ) : item.value === "GitHub" ? (
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={item.href}
+                      key={index}
+                      className="ham-menu_link"
+                    >
+                      <p className="ham-menu_link-text">{item.value}</p>
                     </Link>
                   ) : (
                     <Link

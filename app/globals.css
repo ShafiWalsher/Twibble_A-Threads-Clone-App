@@ -73,7 +73,7 @@ html {
   }
 
   .topbar {
-    @apply fixed top-0 z-30 flex md:max-w-[950] lg:max-w-[950] xl:max-w-[1200px] w-full items-center md:justify-between justify-center px-6 py-1 backdrop-blur-xl;
+    @apply fixed top-0 z-30 flex md:max-w-[950] lg:max-w-[950] xl:max-w-[1200px] w-full items-center md:justify-between justify-center px-6 py-1 backdrop-blur-xl bg-dark-1/80;
   }
 
   .nav-menu_link {

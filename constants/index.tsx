@@ -43,6 +43,10 @@ export const activityTabs = [
 ];
 
 export const menuItems = [
+  {
+    value: "GitHub Repo 🡵",
+    href: "https://github.com/ShafiWalsher/Twibble_A-Threads-Clone-App",
+  },
   { value: "Switch appearance", href: "" },
   { value: "Settings", href: "" },
   { value: "About", href: "" },

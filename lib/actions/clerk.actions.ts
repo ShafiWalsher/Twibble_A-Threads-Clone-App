@@ -3,14 +3,12 @@
 import { currentUser } from "@clerk/nextjs";
 import { getUserByClerkId, getUserById } from "./user.actions";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 interface fetchUserProps {
   userId?: string;
-  path?: string;
 }
 
-export async function fetchUserInfoData({ userId, path }: fetchUserProps = {}) {
+export async function fetchUserInfoData({ userId }: fetchUserProps = {}) {
   const user = await currentUser();
 
   if (!user) redirect("/sign-in");
@@ -22,18 +20,16 @@ export async function fetchUserInfoData({ userId, path }: fetchUserProps = {}) {
   if (userId) {
     userInfo = await getUserById(userId);
 
-    if (!userInfo) {
+    if (!userInfo._id) {
       userInfo = await getUserById(userId);
     }
   } else {
     userInfo = await getUserByClerkId(clerkId);
 
-    if (!userInfo) {
+    if (!userInfo._id) {
       userInfo = await getUserByClerkId(clerkId);
     }
   }
-
-  revalidatePath(path || "/");
 
   const userData = {
     userId: userInfo._id,
@@ -42,7 +38,6 @@ export async function fetchUserInfoData({ userId, path }: fetchUserProps = {}) {
     bio: userInfo.bio || "",
     photoUrl: userInfo.photoUrl,
   };
-  revalidatePath(path || "/");
 
   return { userInfo, userData, clerkId };
 }

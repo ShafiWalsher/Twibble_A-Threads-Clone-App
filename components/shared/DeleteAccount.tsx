@@ -1,15 +1,13 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { deleteUser } from "@/lib/actions/user.actions";
 import { useClerk } from "@clerk/nextjs";
-import { revalidatePath } from "next/cache";
 
 function DeleteAccount({ userId }: { userId: string }) {
-  const pathname = usePathname();
   const { signOut } = useClerk();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -24,10 +22,7 @@ function DeleteAccount({ userId }: { userId: string }) {
     setIsDeleting(false);
     setOpen(false);
     if (deletedUser) {
-      console.log({ deletedUser });
-      signOut();
-      revalidatePath(pathname);
-      router.push("/sign-in");
+      signOut(() => router.push("/sign-in"));
     }
   };
 
